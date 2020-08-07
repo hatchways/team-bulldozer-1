@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon ./bin/www",
-    "debug": "nodemon  --inspect ./bin/www",
+    "debug": "nodemon --debug=12345 --inspect ./bin/www",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000"
   },
   "dependencies": {
