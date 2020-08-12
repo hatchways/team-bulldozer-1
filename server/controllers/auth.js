@@ -4,7 +4,7 @@ const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
 
-function Authenticate(req, res, next) {
+function Authenticate(req, res, next, statusCode) {
   passport.authenticate('local', (err, user) => {
     if (err) { next(err); }
     if (!user) {
@@ -16,7 +16,7 @@ function Authenticate(req, res, next) {
         hash: false,
         salt: false,
       });
-      return res.status(201).send(dbUser);
+      return res.status(statusCode).send(dbUser);
     });
 
     return true;
@@ -41,11 +41,11 @@ exports.SignUp = async function test(req, res, next) {
   await user.setPassword(password);
   await user.save();
 
-  return Authenticate(req, res, next);
+  return Authenticate(req, res, next, 201);
 };
 
 exports.Login = async (req, res, next) => {
-  Authenticate(req, res, next);
+  Authenticate(req, res, next, 200);
 };
 
 exports.Self = async (req, res) => {
