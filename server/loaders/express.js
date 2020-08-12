@@ -15,7 +15,7 @@ module.exports = async (app) => {
   app.use(express.static(join(__dirname, 'public')));
 
   app.use(session({
-    secret: process.env.SESSION_SECRET || 'rQl5OG9XEkK7JX7LEuXKVYH26K55GQ',
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
   }));
