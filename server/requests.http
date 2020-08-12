@@ -10,7 +10,7 @@ GET http://localhost:3001/status HTTP/1.1
 POST http://localhost:3001/auth/register HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
 
-username=foo@example.com
+username=foo@{{$randomInt 10000 99000}}.example.com
 &companyName=foo
 &password=password
 

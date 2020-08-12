@@ -1,9 +1,29 @@
+/* eslint-disable no-underscore-dangle */
 const passport = require('passport');
 const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
 
-exports.SignUp = async (req, res) => {
+function Authenticate(req, res, next) {
+  passport.authenticate('local', (err, user) => {
+    if (err) { next(err); }
+    if (!user) {
+      return res.status(400).send();
+    }
+    req.logIn(user, async (loginErr) => {
+      if (loginErr) { return next(loginErr); }
+      const dbUser = await User.findOne({ _id: user._id }, {
+        hash: false,
+        salt: false,
+      });
+      return res.status(201).send(dbUser);
+    });
+
+    return true;
+  })(req, res, next);
+}
+
+exports.SignUp = async function test(req, res, next) {
   const errors = validationResult(req);
   if (errors.errors.length > 0) {
     return res.status(400).send({ errors: errors.errors });
@@ -21,26 +41,11 @@ exports.SignUp = async (req, res) => {
   await user.setPassword(password);
   await user.save();
 
-  await User.authenticate()(username, password);
-
-  // TODO: Manually return token still required when using passport?
-  return res.status(201).send({ response: `${username} account created!` });
+  return Authenticate(req, res, next);
 };
 
 exports.Login = async (req, res, next) => {
-  passport.authenticate('local', (err, user) => {
-    if (err) { next(err); }
-    if (!user) {
-      return res.status(400).send();
-    }
-    req.logIn(user, (loginErr) => {
-      if (loginErr) { return next(loginErr); }
-      // TODO: Manually return token still required when using passport?
-      return res.status(200).send();
-    });
-
-    return true;
-  })(req, res, next);
+  Authenticate(req, res, next);
 };
 
 exports.Self = async (req, res) => {
