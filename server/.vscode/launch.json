@@ -31,6 +31,9 @@
                 "--colors",
                 "${workspaceFolder}/test"
             ],
+            "runtimeArgs": [
+                "--require=dotenv/config"
+            ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         },
@@ -44,6 +47,9 @@
                 "999999",
                 "--colors",
                 "${file}"
+            ],
+            "runtimeArgs": [
+                "--require=dotenv/config"
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
