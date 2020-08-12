@@ -1,0 +1,27 @@
+#Use the following VSCode extension to quickly test endpoints
+#  Name: REST Client
+#  Id: humao.rest-client
+#  Description: REST Client for Visual Studio Code
+#  VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+GET http://localhost:3001/status HTTP/1.1
+
+### Register
+POST http://localhost:3001/auth/register HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+username=foo@{{$randomInt 10000 99000}}.example.com
+&companyName=foo
+&password=password
+
+### Login (update cookie)
+POST http://localhost:3001/auth/login HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+username=foo@example.com
+&password=password
+
+### Get my profile info (should login first)
+GET http://localhost:3001/auth/me HTTP/1.1
+
+

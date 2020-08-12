@@ -9,12 +9,12 @@
 ## Stack
 
 - MongoDB + [Mongoose](https://mongoosejs.com/docs/) + [Passport-JS](http://www.passportjs.org/)
-- [Search tweets](https://developer.twitter.com/en/docs/tweets/search/overview) : free is limited in time range but faster to implement
-- [Twitter feed source api](https://developer.twitter.com/en/docs/tweets/filter-realtime/overview) : Best of all, allow real-time capture of tweets. Needs a running worker, can't be deployed to serverless
-- [Reddit Search API](https://www.reddit.com/dev/api/#GET_search)
-  - [reddit npm](https://www.npmjs.com/package/reddit)
 - Express.js
 - Node.js
+    - [Search tweets](https://developer.twitter.com/en/docs/tweets/search/overview) : free is limited in time range but faster to implement
+    - [Twitter feed source api](https://developer.twitter.com/en/docs/tweets/filter-realtime/overview) : Best of all, allow real-time capture of tweets. Needs a running worker, can't be deployed to serverless
+    - [Reddit Search API](https://www.reddit.com/dev/api/#GET_search)
+      - [reddit npm](https://www.npmjs.com/package/reddit)
 - React (bootstraped with [create-react-app](https://create-react-app.dev/)) 
     - [Material-UI](https://material-ui.com/) is used for UI components
     - All styles are authored using [JSS](https://cssinjs.org/) using Material UI's wrappers
@@ -42,6 +42,14 @@ server
 ```
 docker run --name hatchways-mongo -p 27017:27017 -d mongo:4.4-bionic
 ```
+
+### Starting the backend
+
+1. In the `/server` folder, install dependencies with `npm install`
+2. To run:
+    * Run `npm run debug` to start the backend locally with hot reload on `http://localhost:3001`
+    * Run `npm test` to run unit tests
+
 
 ## Front-end
 
