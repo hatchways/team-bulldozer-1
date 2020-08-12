@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const passport = require('passport');
 const { validationResult } = require('express-validator');
 
