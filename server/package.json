@@ -4,19 +4,21 @@
   "private": true,
   "scripts": {
     "dev": "nodemon ./bin/www",
-    "debug": "nodemon --debug=12345 --inspect ./bin/www",
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000"
+    "debug": "nodemon ./bin/www",
+    "test": "./node_modules/.bin/mocha --exit --timeout 30000"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
     "cookie-parser": "~1.4.5",
+    "cookie-session": "^1.4.0",
     "debug": "~4.1.1",
     "dotenv": "^8.2.0",
-    "express": "~4.17.1",
-    "http-errors": "~1.8.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "express-validator": "^6.6.1",
+    "http-errors": "^1.8.0",
     "mongoose": "^5.9.28",
     "morgan": "~1.10.0",
-    "nodemon": "^2.0.4",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.0.1"
@@ -28,5 +30,8 @@
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.21.2",
+    "mocha": "^8.1.1",
+    "mongodb-memory-server": "^6.6.3",
+    "nodemon": "^2.0.4"
   }
 }
