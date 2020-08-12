@@ -1,8 +1,9 @@
-const express = require("express");
-const router = express.Router();
-
-router.get("/welcome", function (req, res, next) {
-  res.status(200).send({ welcomeMessage: "Step 1 (completed)" });
-});
-
-module.exports = router;
+/* eslint-disable global-require */
+/**
+ * All routes are here to import all of them just with one command
+ * in the main app.js
+ */
+module.exports = (app) => {
+  require('./home')(app);
+  require('./auth')(app);
+};
