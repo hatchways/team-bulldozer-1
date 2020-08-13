@@ -28,3 +28,10 @@ module.exports.userSignin = [
   body('username').isEmail().normalizeEmail(),
   body('password').isLength({ min: MIN_PASS_LEN }),
 ];
+
+module.exports.isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  return res.status(401).send();
+};
