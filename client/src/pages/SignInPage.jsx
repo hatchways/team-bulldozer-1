@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { Button, Snackbar, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import SignedOutPageHeader from '../components/SignedOutPageHeader';
+import AuthApi from '../utils/api/AuthApi';
+import { Alert } from '@material-ui/lab'
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -19,6 +21,7 @@ const SignUpPage = () => {
   const [errors, setErrors] = useState({});
 
   const handleChange = (field, event) => {
+    setErrors({});
     setFields({
       ...fields,
       [field]: event.target.value,
@@ -27,7 +30,23 @@ const SignUpPage = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    console.log(fields); // TODO - handle it like there's no tomorrow
+    AuthApi.login(fields.username, fields.password)
+      .then((response) => {
+        console.log('logged in', response);
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 400) {
+          setErrors({
+            ...errors,
+            general: 'Invalid username or password.',
+          });
+        } else {
+          setErrors({
+            ...errors,
+            general: 'An unexpected server error occured. Please try again later.',
+          });
+        }
+      });
   };
 
   return (
@@ -66,6 +85,13 @@ const SignUpPage = () => {
         >
           Submit
         </Button>
+        {!!errors.general ? (
+          <Snackbar open={!!errors.general} autoHideDuration={2000}>
+            <Alert severity="error">
+              { errors.general }
+            </Alert>
+          </Snackbar>
+        ) : null }
       </form>
     </main>
   );

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField, Snackbar } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import SignedOutPageHeader from '../components/SignedOutPageHeader';
+import AuthApi from '../utils/api/AuthApi';
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -16,7 +18,7 @@ const SignUpPage = () => {
   const classes = useStyles();
 
   const [fields, setFields] = useState({
-    email: '', company: '', password: '', passwordRepeat: '',
+    username: '', companyName: '', password: '', passwordRepeat: '',
   });
   const [errors, setErrors] = useState({});
 
@@ -53,7 +55,33 @@ const SignUpPage = () => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     if (validate()) {
-      console.log(fields); // TODO - handle it like no one's watching
+      AuthApi.register(fields.username, fields.companyName, fields.password)
+        .then((response) => {
+          console.log('res', response); // TODO - store me in context plz
+        })
+        .catch((error) => {
+          const errorData = error.response.data;
+          if (errorData.errors) {
+            const errorsToDisplay = {};
+            errorData.errors.forEach((errorMsg) => {
+              errorsToDisplay[errorMsg.param] = errorMsg.msg;
+            });
+            setErrors({
+              ...errors,
+              ...errorsToDisplay,
+            });
+          } else if (errorData.response) {
+            setErrors({
+              ...errors,
+              general: errorData.response,
+            });
+          } else {
+            setErrors({
+              ...errors,
+              general: 'An unexpected error occured while creating your account.',
+            });
+          }
+        });
     }
   };
 
@@ -68,10 +96,10 @@ const SignUpPage = () => {
           required
           label="Your email"
           variant="outlined"
-          value={fields.email}
-          onChange={(event) => handleChange('email', event)}
-          error={!!errors.email}
-          helperText={errors.email}
+          value={fields.username}
+          onChange={(event) => handleChange('username', event)}
+          error={!!errors.username}
+          helperText={errors.username}
         />
         <TextField
           className={classes.input}
@@ -79,10 +107,10 @@ const SignUpPage = () => {
           required
           label="Company Name"
           variant="outlined"
-          value={fields.company}
-          onChange={(event) => handleChange('company', event)}
-          error={!!errors.company}
-          helperText={errors.company}
+          value={fields.companyName}
+          onChange={(event) => handleChange('companyName', event)}
+          error={!!errors.companyName}
+          helperText={errors.companyName}
         />
         <TextField
           className={classes.input}
@@ -116,6 +144,13 @@ const SignUpPage = () => {
         >
           Submit
         </Button>
+        {!!errors.general ? (
+          <Snackbar open={!!errors.general} autoHideDuration={2000}>
+            <Alert severity="error">
+              { errors.general }
+            </Alert>
+          </Snackbar>
+        ) : null }
       </form>
     </main>
   );
