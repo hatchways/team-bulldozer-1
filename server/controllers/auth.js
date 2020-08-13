@@ -47,9 +47,11 @@ exports.Login = async (req, res, next) => {
   Authenticate(req, res, next, 200);
 };
 
+exports.Logout = async (req, res) => {
+  req.logout();
+  return res.status(200).send();
+};
+
 exports.Self = async (req, res) => {
-  if (!req.user) {
-    return res.status(401).send();
-  }
-  return res.status(200).send(req.user);
+  res.status(200).send(req.user);
 };
