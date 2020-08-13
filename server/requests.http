@@ -22,8 +22,7 @@ username=foo@example.com&companyName=foo&password=password
 POST {{host}}/auth/login HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
 
-username=foo@example.com
-&password=password
+username=foo@example.com&password=password
 
 ### Logout (update cookie)
 POST {{host}}/auth/logout HTTP/1.1

@@ -22,11 +22,7 @@ function Authenticate(req, res, next, statusCode) {
   })(req, res, next);
 }
 
-exports.SignUp = async function test(req, res, next) {
-  const errors = validationResult(req);
-  if (errors.errors.length > 0) {
-    return res.status(400).send({ errors: errors.errors });
-  }
+exports.SignUp = async (req, res, next) => {
   const { username } = req.body;
   const userExists = await User.exists({ username });
   if (userExists) {
@@ -54,4 +50,11 @@ exports.Logout = async (req, res) => {
 
 exports.Self = async (req, res) => {
   res.status(200).send(req.user);
+};
+
+exports.UpdateProfile = async (req, res) => {
+  const { terms, email } = req.body;
+  await User.findByIdAndUpdate(req.user._id, { terms, email }).exec();
+
+  return res.status(202).send();
 };
