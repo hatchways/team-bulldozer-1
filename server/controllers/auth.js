@@ -1,5 +1,4 @@
 const passport = require('passport');
-const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
 
@@ -14,7 +13,7 @@ function Authenticate(req, res, next, statusCode) {
       const dbUser = await User.findOne({ _id: user._id }, {
         hash: false,
         salt: false,
-      });
+      }).lean();
       return res.status(statusCode).send(dbUser);
     });
 
@@ -22,11 +21,7 @@ function Authenticate(req, res, next, statusCode) {
   })(req, res, next);
 }
 
-exports.SignUp = async function test(req, res, next) {
-  const errors = validationResult(req);
-  if (errors.errors.length > 0) {
-    return res.status(400).send({ errors: errors.errors });
-  }
+exports.SignUp = async (req, res, next) => {
   const { username } = req.body;
   const userExists = await User.exists({ username });
   if (userExists) {
@@ -36,7 +31,9 @@ exports.SignUp = async function test(req, res, next) {
   const { password, companyName } = req.body;
 
   // Create document
-  const user = new User({ username, companyName, password });
+  const user = new User({
+    username, companyName, password, email: username, terms: [companyName],
+  });
   await user.setPassword(password);
   await user.save();
 
@@ -54,4 +51,20 @@ exports.Logout = async (req, res) => {
 
 exports.Self = async (req, res) => {
   res.status(200).send(req.user);
+};
+
+exports.UpdateProfile = async (req, res) => {
+  const { terms, email, crawlers } = req.body;
+  const obj = {
+    email,
+    terms: terms && [...new Set(terms)],
+    crawlers: crawlers && [...new Set(crawlers)],
+  };
+
+  // TODO: add to utility class (remove undefined keys)
+  Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
+
+  await User.updateOne({ _id: req.user._id }, obj).exec();
+
+  return res.status(202).send();
 };

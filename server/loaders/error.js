@@ -2,7 +2,7 @@ const createError = require('http-errors');
 
 module.exports = async (app) => {
   // catch 404 and forward to error handler
-  app.use((_req, _res, next) => {
+  app.use((req, res, next) => {
     next(createError(404));
   });
 

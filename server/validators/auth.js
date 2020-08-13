@@ -1,8 +1,24 @@
-const { body, checkSchema } = require('express-validator');
+const { body, checkSchema, validationResult } = require('express-validator');
 
 const MIN_PASS_LEN = 6;
 
-module.exports.userSignup = [
+async function validateParameters(req, res, next) {
+  const errors = validationResult(req);
+  if (errors.errors.length > 0) {
+    return res.status(400).send({ errors: errors.errors });
+  }
+
+  return next();
+}
+
+function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  return res.status(401).send();
+}
+
+exports.userSignup = [
   body('username')
     .isEmail()
     .normalizeEmail(),
@@ -22,9 +38,19 @@ module.exports.userSignup = [
       },
     },
   }),
+  validateParameters,
 ];
 
-module.exports.userSignin = [
+exports.userSignin = [
   body('username').isEmail().normalizeEmail(),
   body('password').isLength({ min: MIN_PASS_LEN }),
+];
+
+exports.isAuthenticated = isAuthenticated;
+
+exports.updateUserProfile = [
+  isAuthenticated,
+  body('email').isEmail().normalizeEmail().optional(),
+  body('terms').isArray().optional(),
+  validateParameters,
 ];
