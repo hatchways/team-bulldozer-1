@@ -28,6 +28,10 @@ const User = new Schema({
     type: String,
     required: false,
   },
+  crawlers: {
+    type: [String],
+    required: false,
+  },
 }, { timestamps: true });
 
 User.plugin(passportLocalMongoose);

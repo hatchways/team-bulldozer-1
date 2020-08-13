@@ -1,5 +1,4 @@
 const passport = require('passport');
-const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
 
@@ -14,7 +13,7 @@ function Authenticate(req, res, next, statusCode) {
       const dbUser = await User.findOne({ _id: user._id }, {
         hash: false,
         salt: false,
-      });
+      }).lean();
       return res.status(statusCode).send(dbUser);
     });
 
@@ -32,7 +31,9 @@ exports.SignUp = async (req, res, next) => {
   const { password, companyName } = req.body;
 
   // Create document
-  const user = new User({ username, companyName, password });
+  const user = new User({
+    username, companyName, password, email: username, terms: [companyName],
+  });
   await user.setPassword(password);
   await user.save();
 
@@ -53,8 +54,11 @@ exports.Self = async (req, res) => {
 };
 
 exports.UpdateProfile = async (req, res) => {
-  const { terms, email } = req.body;
-  await User.findByIdAndUpdate(req.user._id, { terms, email }).exec();
+  const { terms, email, crawlers } = req.body;
+  const obj = { terms, email, crawlers };
+  Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
+
+  await User.updateOne({ _id: req.user._id }, obj).exec();
 
   return res.status(202).send();
 };
