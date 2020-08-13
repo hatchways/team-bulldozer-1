@@ -55,7 +55,13 @@ exports.Self = async (req, res) => {
 
 exports.UpdateProfile = async (req, res) => {
   const { terms, email, crawlers } = req.body;
-  const obj = { terms, email, crawlers };
+  const obj = {
+    email,
+    terms: terms && [...new Set(terms)],
+    crawlers: crawlers && [...new Set(crawlers)],
+  };
+
+  // TODO: add to utility class (remove undefined keys)
   Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
 
   await User.updateOne({ _id: req.user._id }, obj).exec();
