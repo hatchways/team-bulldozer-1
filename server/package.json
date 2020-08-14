@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./bin/www",
-    "debug": "nodemon ./bin/www",
+    "dev": "nodemon ./src/bin/www",
+    "debug": "nodemon ./src/bin/www",
     "test": "./node_modules/.bin/mocha --exit --timeout 30000"
   },
   "config": {

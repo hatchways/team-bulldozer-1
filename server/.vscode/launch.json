@@ -38,7 +38,7 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/test"
+                "${workspaceFolder}/src/test"
             ],
             "runtimeArgs": [
                 "--require=dotenv/config"
