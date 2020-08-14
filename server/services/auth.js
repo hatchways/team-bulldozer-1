@@ -2,6 +2,9 @@ const passport = require('passport');
 
 const User = require('../models/user');
 
+// TODO: Put in settings somewhere
+const defaultCrawlers = ['reddit', 'twitter'];
+
 function Authenticate(req, res, next, statusCode) {
   passport.authenticate('local', (err, user) => {
     if (err) { next(err); }
@@ -13,6 +16,7 @@ function Authenticate(req, res, next, statusCode) {
       const dbUser = await User.findOne({ _id: user._id }, {
         hash: false,
         salt: false,
+        __v: false,
       }).lean();
       return res.status(statusCode).send(dbUser);
     });
@@ -32,7 +36,12 @@ exports.SignUp = async (req, res, next) => {
 
   // Create document
   const user = new User({
-    username, companyName, password, email: username, terms: [companyName],
+    username,
+    password,
+    companyName,
+    email: username,
+    terms: [companyName],
+    crawlers: defaultCrawlers,
   });
   await user.setPassword(password);
   await user.save();
