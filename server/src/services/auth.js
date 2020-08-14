@@ -1,6 +1,6 @@
 const passport = require('passport');
 
-const User = require('../models/user');
+const { User } = require('../models/user');
 
 // TODO: Put in settings somewhere
 const defaultCrawlers = ['reddit', 'twitter'];
