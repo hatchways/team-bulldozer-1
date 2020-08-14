@@ -7,7 +7,7 @@ jobs: # a collection of steps
       - checkout # special step to check out source code to working directory
       - run:
           name: update-npm
-          command: "sudo npm install -g n"
+          command: "sudo npm install -g n mocha eslint"
       - run:
           name: update-npm
           command: "sudo n stable"
@@ -21,6 +21,40 @@ jobs: # a collection of steps
           key: dependency-cache-{{ checksum "server/package.json" }}
           paths:
             - server/node_modules
+      - run:
+          name: export-linter-result
+          command: |
+            cd server
+            mkdir -p ./reports
+            eslint ./src --format junit --output-file ./reports/eslint.xml
+          when: always
+      - run:
+          name: export-test-result
+          command: |
+            cd server
+            mkdir -p ./reports
+            mocha ./src/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml
+          when: always
+      - store_test_results:
+          path: ./server/src/coverage
+          when: always
+      - store_test_results:
+          path: ./server/reports
+          when: always
+      - store_artifacts:
+          path: ./server/src/coverage
+          destination: coverage
+          when: always
+      - store_artifacts:
+          path: ./server/reports
+          destination: reports
+          when: always
       - run: # run tests
           name: test
           command: cd server && npm run start:test
+      - run: # run build
+          name: build
+          command: cd server && npm run build
+      - store_artifacts:
+          path: ./server/build
+          destination: circleci-build
