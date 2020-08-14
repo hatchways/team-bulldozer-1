@@ -1,56 +1,66 @@
-const { body, checkSchema, validationResult } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 
 const MIN_PASS_LEN = 6;
+const MIN_COMPANY_NAME_LEN = 3;
 
-async function validateParameters(req, res, next) {
+const UserSchema = {
+  username: body('username')
+    .isEmail().normalizeEmail(),
+
+  password: body('password')
+    .isLength({ min: MIN_PASS_LEN }),
+
+  companyName: body('companyName')
+    .isString().trim()
+    .isLength({ min: MIN_COMPANY_NAME_LEN }),
+
+  email: body('email')
+    .isEmail().normalizeEmail(),
+
+  terms: body('terms')
+    .isArray(),
+
+  crawlers: body('crawlers')
+    .isArray(),
+};
+
+const validate = (validations) => async (req, res, next) => {
+  await Promise.all(validations.map((validation) => validation.run(req)));
+
   const errors = validationResult(req);
-  if (errors.errors.length > 0) {
-    return res.status(400).send({ errors: errors.errors });
+  if (errors.isEmpty()) {
+    return next();
   }
 
-  return next();
-}
+  return res.status(400).json({ errors: errors.array() });
+};
 
-function isAuthenticated(req, res, next) {
+const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
   return res.status(401).send();
-}
-
-exports.userSignup = [
-  body('username')
-    .isEmail()
-    .normalizeEmail(),
-  checkSchema({
-    password: {
-      isLength: {
-        errorMessage: 'Password should be at least 6 chars long',
-        // Multiple options would be expressed as an array
-        options: { min: MIN_PASS_LEN },
-      },
-    },
-    companyName: {
-      isLength: {
-        errorMessage: 'Company name should be at least 3 chars long',
-        // Multiple options would be expressed as an array
-        options: { min: 3 },
-      },
-    },
-  }),
-  validateParameters,
-];
-
-exports.userSignin = [
-  body('username').isEmail().normalizeEmail(),
-  body('password').isLength({ min: MIN_PASS_LEN }),
-];
+};
 
 exports.isAuthenticated = isAuthenticated;
 
+exports.userSignup = validate([
+  UserSchema.username,
+  UserSchema.password,
+  UserSchema.companyName,
+]);
+
+exports.userSignin = validate([
+  UserSchema.username,
+  UserSchema.password,
+]);
+
 exports.updateUserProfile = [
   isAuthenticated,
-  body('email').isEmail().normalizeEmail().optional(),
-  body('terms').isArray().optional(),
-  validateParameters,
+  validate([
+    UserSchema.companyName.optional(),
+    UserSchema.email.optional(),
+    UserSchema.terms.optional(),
+    UserSchema.crawlers.optional(),
+  ]),
 ];
