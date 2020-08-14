@@ -73,7 +73,9 @@ exports.UpdateProfile = async (req, res) => {
   // TODO: add to utility class (remove undefined keys)
   Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
 
-  await User.updateOne({ _id: req.user._id }, obj).exec();
-
-  return res.status(202).send();
+  if (Object.keys(obj).length > 0) {
+    await User.updateOne({ _id: req.user._id }, obj).exec();
+    return res.status(202).send();
+  }
+  return res.status(200).send();
 };
