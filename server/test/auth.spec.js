@@ -40,6 +40,13 @@ describe('auth', () => {
       .send(validAccount);
   }
 
+  async function getLoggedInAgent() {
+    await createAccount();
+    const agent = chai.request.agent(app);
+    await agent.post('/auth/login/').send(validAccount);
+    return agent;
+  }
+
   describe('/POST auth/register', () => {
     async function expectStatus(done, expectedStatusCode, objectToSend) {
       const result = await chai
@@ -93,11 +100,10 @@ describe('auth', () => {
   describe('/GET auth/me', () => {
     it('it should return 200 when logged in', async () => {
       // Prepare
-      await createAccount();
-      const agent = chai.request.agent(app);
-      await agent.post('/auth/login/').send(validAccount);
-
+      const agent = await getLoggedInAgent();
+      // Act
       const result = await agent.get('/auth/me');
+      // Assert
       should.not.exist(result.err);
       result.should.have.status(200);
     });
@@ -105,7 +111,9 @@ describe('auth', () => {
     it('it should return 401 when not logged in', async () => {
       // Prepare
       const agent = chai.request.agent(app);
+      // Act
       const result = await agent.get('/auth/me');
+      // Assert
       should.not.exist(result.err);
       result.should.have.status(401);
     });
@@ -114,17 +122,43 @@ describe('auth', () => {
   describe('/PATCH auth/me', () => {
     it('it should return 202 when updated', async () => {
       // Prepare
-      await createAccount();
-      const agent = chai.request.agent(app);
-      await agent.post('/auth/login/').send(validAccount);
+      const agent = await getLoggedInAgent();
 
       (await agent.patch('/auth/me')
-        .send({ terms: ['foo'] }))
-        .should.have.status(202);
+        .send({ terms: ['foo'] })).should.have.status(202);
 
       (await agent.patch('/auth/me')
         .send({ terms: ['foo'], email: 'foo@example.com' }))
         .should.have.status(202);
+
+      (await agent.patch('/auth/me')
+        .send({ crawlers: ['twitter'] }))
+        .should.have.status(202);
+    });
+
+    it('it should return 4** when updating with wrong values', async () => {
+      // Prepare
+      const agent = await getLoggedInAgent();
+
+      (await agent.patch('/auth/me')
+        .send({ email: ['foo'] }))
+        .should.have.status(400);
+
+      (await agent.patch('/auth/me')
+        .send({ terms: 3, email: 'foo@example.com' }))
+        .should.have.status(400);
+
+      (await agent.patch('/auth/me')
+        .send({ companyName: ' ' }))
+        .should.have.status(400);
+
+      (await agent.patch('/auth/me')
+        .send({ companyName: '' }))
+        .should.have.status(400);
+
+      (await agent.patch('/auth/me')
+        .send({ email: 'foo' }))
+        .should.have.status(400);
     });
 
     it('it should return 401 when not logged in', async () => {

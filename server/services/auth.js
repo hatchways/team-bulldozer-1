@@ -2,6 +2,9 @@ const passport = require('passport');
 
 const User = require('../models/user');
 
+// TODO: Put in settings somewhere
+const defaultCrawlers = ['reddit', 'twitter'];
+
 function Authenticate(req, res, next, statusCode) {
   passport.authenticate('local', (err, user) => {
     if (err) { next(err); }
@@ -13,6 +16,7 @@ function Authenticate(req, res, next, statusCode) {
       const dbUser = await User.findOne({ _id: user._id }, {
         hash: false,
         salt: false,
+        __v: false,
       }).lean();
       return res.status(statusCode).send(dbUser);
     });
@@ -32,7 +36,12 @@ exports.SignUp = async (req, res, next) => {
 
   // Create document
   const user = new User({
-    username, companyName, password, email: username, terms: [companyName],
+    username,
+    password,
+    companyName,
+    email: username,
+    terms: [companyName],
+    crawlers: defaultCrawlers,
   });
   await user.setPassword(password);
   await user.save();
@@ -64,7 +73,9 @@ exports.UpdateProfile = async (req, res) => {
   // TODO: add to utility class (remove undefined keys)
   Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
 
-  await User.updateOne({ _id: req.user._id }, obj).exec();
-
-  return res.status(202).send();
+  if (Object.keys(obj).length > 0) {
+    await User.updateOne({ _id: req.user._id }, obj).exec();
+    return res.status(202).send();
+  }
+  return res.status(200).send();
 };
