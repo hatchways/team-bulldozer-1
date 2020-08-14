@@ -1,19 +1,15 @@
-/* eslint-disable no-undef */
 process.env.NODE_ENV = 'test';
 
 const chai = require('chai');
 const path = require('path');
 const chaiHttp = require('chai-http');
-const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
+const { User } = require('../models/user');
 
 const should = chai.should();
 const dotEnvPath = path.resolve('./.env');
 require('dotenv').config({ path: dotEnvPath });
 
 const app = require('../app.js');
-
-let mongoServer;
 
 // Prepare
 const validAccount = { username: 'foo@example.com', password: 'password', companyName: 'foo' };
@@ -22,15 +18,11 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('auth', () => {
-  before(async () => {
-    mongoServer = new MongoMemoryServer();
-    const mongoUri = await mongoServer.getUri();
-    await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+  before(() => {
+    User.collection.drop();
   });
 
-  after(async () => {
-    await mongoose.disconnect();
-    await mongoServer.stop();
+  after(() => {
   });
 
   function createAccount() {

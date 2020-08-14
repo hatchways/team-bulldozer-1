@@ -3,12 +3,6 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const passportLocalMongoose = require('passport-local-mongoose');
 
-// TODO: Put in shared config file
-mongoose.set('useCreateIndex', true);
-mongoose.connect(process.env.MONGO_DB, {
-  useNewUrlParser: true, useUnifiedTopology: true,
-});
-
 const User = new Schema({
   username: {
     type: String,
@@ -37,4 +31,7 @@ const User = new Schema({
 User.plugin(passportLocalMongoose);
 
 const Model = mongoose.model('User', User);
-module.exports = Model;
+module.exports = {
+  User: Model,
+  UserModel: (conn) => conn.model('User', User),
+};
