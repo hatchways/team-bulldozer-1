@@ -23,3 +23,7 @@ yarn-error.log*
 mongodb-binaries/*
 
 server/build/
+
+server/.nyc_output/
+
+server/reports/
