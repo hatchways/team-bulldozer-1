@@ -23,4 +23,4 @@ jobs: # a collection of steps
             - server/node_modules
       - run: # run tests
           name: test
-          command: cd server && npm test
+          command: cd server && npm run start:test

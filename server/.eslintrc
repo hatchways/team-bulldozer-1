@@ -3,5 +3,17 @@
     "rules": {
         "no-underscore-dangle": "off",
         "linebreak-style": "off"
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [
+                    ".js",
+                    ".jsx",
+                    ".ts",
+                    ".tsx"
+                ]
+            }
+        }
     }
-}  
+}
