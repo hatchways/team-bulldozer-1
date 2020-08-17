@@ -15,6 +15,10 @@ module.exports.Validate = () => {
   validateMandatoryEnvironmentVariable('SESSION_SECRET');
   validateMandatoryEnvironmentVariable('MONGO_DB');
 
+  if (process.env.NODE_ENV === 'test') {
+    return;
+  }
+
   validateMandatoryEnvironmentVariable('TWITTER_CONSUMER_KEY');
   validateMandatoryEnvironmentVariable('TWITTER_CONSUMER_SECRET');
   validateMandatoryEnvironmentVariable('TWITTER_TOKEN');

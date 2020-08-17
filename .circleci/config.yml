@@ -28,12 +28,18 @@ jobs: # a collection of steps
             mkdir -p ./reports
             eslint ./src --format junit --output-file ./reports/eslint.xml
           when: always
+      - run: # run build
+          name: build
+          command: cd server && npm run build
+      - store_artifacts:
+          path: ./server/build
+          destination: circleci-build
       - run:
           name: export-test-result
           command: |
             cd server
             mkdir -p ./reports
-            mocha ./src/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml
+            mocha ./build/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml
           when: always
       - store_test_results:
           path: ./server/src/coverage
@@ -49,12 +55,3 @@ jobs: # a collection of steps
           path: ./server/reports
           destination: reports
           when: always
-      - run: # run tests
-          name: test
-          command: cd server && npm run start:test
-      - run: # run build
-          name: build
-          command: cd server && npm run build
-      - store_artifacts:
-          path: ./server/build
-          destination: circleci-build

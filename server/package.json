@@ -6,8 +6,9 @@
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/bin/www.js",
     "start:dev": "nodemon ./src/bin/www.js",
-    "start:test": "./node_modules/.bin/mocha ./src/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml",
-    "start:coverage": "node ./node_modules/nyc/bin/nyc.js ./node_modules/.bin/mocha ./src/**/*.spec.js ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml",
+    "start:dev:test": "./node_modules/.bin/mocha ./src/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --timeout 30000",
+    "start:test": "./node_modules/.bin/mocha ./build/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml",
+    "start:coverage": "node ./node_modules/nyc/bin/nyc.js ./node_modules/.bin/mocha ./build/**/*.spec.js ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml",
     "start:lint": "eslint ./src/"
   },
   "config": {
