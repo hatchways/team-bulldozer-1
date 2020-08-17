@@ -45,14 +45,22 @@ Content-Type: application/json
 PATCH {{host}}/auth/me HTTP/1.1
 Content-Type: application/json
 
-{
-  "terms": [ "Company ABC", "Company DEF" ]
-}
+{ "terms": [ "Company ABC", "Company DEF" ] }
 
 ### Update active crawlers
 PATCH {{host}}/auth/me HTTP/1.1
 Content-Type: application/json
 
-{
-  "crawlers": ["foo", "bar"]
-}
+{ "crawlers": ["foo", "bar"] }
+
+
+### Search
+GET {{host}}/search?term=ABC&type=recent HTTP/1.1
+Content-Type: application/json
+### 
+GET {{host}}/search?term=ABC&type=popular HTTP/1.1
+Content-Type: application/json
+### Popular by default
+GET {{host}}/search?term=ABC HTTP/1.1
+Content-Type: application/json
+

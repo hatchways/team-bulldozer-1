@@ -14,4 +14,9 @@ module.exports.Validate = () => {
   // Validate mandatory env VARS
   validateMandatoryEnvironmentVariable('SESSION_SECRET');
   validateMandatoryEnvironmentVariable('MONGO_DB');
+
+  validateMandatoryEnvironmentVariable('TWITTER_CONSUMER_KEY');
+  validateMandatoryEnvironmentVariable('TWITTER_CONSUMER_SECRET');
+  validateMandatoryEnvironmentVariable('TWITTER_TOKEN');
+  validateMandatoryEnvironmentVariable('TWITTER_TOKEN_SECRET');
 };

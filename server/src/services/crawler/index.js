@@ -3,25 +3,38 @@
 /* eslint-disable class-methods-use-this */
 const { readdirSync } = require('fs');
 
-// TODO: Add cache / singleton pattern
-
 /**
  * Provide abstraction to implemented crawlers
  */
 class CrawlerService {
   constructor(name) {
     this.name = name;
+    this.crawlerList = undefined;
+    this.crawlerInstanceList = {};
   }
 
   /**
    * List crawler types
    */
   getCrawlers() {
-    const getDirectories = (source) => readdirSync(source, { withFileTypes: true })
-      .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => dirent.name);
+    if (this.crawlerList === undefined) {
+      const getDirectories = (source) => readdirSync(source, { withFileTypes: true })
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name);
 
-    const crawlers = getDirectories(__dirname);
+      const crawlers = getDirectories(__dirname);
+      this.crawlerList = crawlers;
+    }
+    return this.crawlerList;
+  }
+
+  getActiveCrawlers(user) {
+    let crawlers = this.getCrawlers();
+    // Filter on actual user active crawlers
+    if (user && user.crawlers) {
+      const userCrawlers = user.crawlers;
+      crawlers = crawlers.filter((name) => user.crawlers.indexOf(name) > -1);
+    }
     return crawlers;
   }
 
@@ -29,6 +42,10 @@ class CrawlerService {
     const crawlers = this.getCrawlers();
     if (crawlers.indexOf(name) < 0) {
       return undefined;
+    }
+
+    if (this.crawlerInstanceList[name] !== undefined) {
+      return this.crawlerInstanceList[name];
     }
 
     // name validated to avoid path traversal
@@ -51,6 +68,8 @@ class CrawlerService {
     if (methods.concat(attributes).length !== methodNames.length) {
       throw Error('Missing methods from interface CrawlerBase');
     }
+
+    this.crawlerInstanceList[name] = crawler;
 
     return crawler;
   }
