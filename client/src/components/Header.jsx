@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import {
   AppBar,
   Button,
+  InputBase,
   Toolbar,
   Typography,
 } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/core/styles';
 
 import logo from '../assets/img/logo.svg';
@@ -32,6 +34,39 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     width: '172px',
   },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.common.white,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(3),
+      width: 'auto',
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  searchInputRoot: {
+    color: 'inherit',
+  },
+  searchInputInput: {
+    padding: theme.spacing(2, 0, 2, 3),
+    paddingRight: `calc(1em + ${theme.spacing(4)}px)`,
+    width: '100%',
+    color: theme.palette.common.black,
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
+    },
+  },
   toolbar: {
     justifyContent: 'space-between',
     minHeight: '100px',
@@ -47,7 +82,20 @@ const Header = ({ isLandingPage, isSignedIn }) => {
         <Toolbar className={classes.toolbar}>
           <Link to="/"><img className={classes.logo} src={logo} alt="Mentions Crawler Logo" /></Link>
           {isSignedIn
-            ? <div />
+            ? <div>
+                <div class={classes.search}>
+                  <InputBase
+                    placeholder="Search in your mentions"
+                    classes={{
+                      root: classes.searchInputRoot,
+                      input: classes.searchInputInput,
+                    }}
+                  />
+                  <div className={classes.searchIcon}>
+                    <SearchIcon color="primary" />
+                  </div>
+                </div>
+              </div>
             : (
               <div className={classes.ctaWrapper}>
                 <Typography className={classes.ctaText}>
