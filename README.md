@@ -61,15 +61,18 @@ docker run --name hatchways-mongo -p 27017:27017 -d mongo:4.4-bionic
 ### Folder structure
 ```
 client
-├───public           # Static files
+├───public              # Static files
 ├───src
-├───├───assets       # Visual assets (images, icons, etc.)
-├───├───components   # Reusable components
-├───├───layouts      # Layouts used by the routes to render the different interfaces
-├───├───pages        # Page components that get rendered into the layouts
-├───├───themes       # Material UI theme definition
-└───    App.jsx      # App init + routes
-└───    index.jsx    # Main entry point / app mount
+├───├───assets          # Visual assets (images, icons, etc.)
+├───├───components      # Reusable components
+├───├───layouts         # Layouts used by the routes to render the different interfaces
+├───├───pages           # Page components that get rendered into the layouts
+├───├───themes          # Material UI theme definition
+├───├───utils           # Non-React JS code and classes to support the components
+├───├───├───api         #   - Static classes that wrap backend API calls
+├───├───    helpers.js  #   - Pure functions reused through the app
+└───    App.jsx         # App init + routes
+└───    index.jsx       # Main entry point / app mount
 ```
 
 ### Starting the app
