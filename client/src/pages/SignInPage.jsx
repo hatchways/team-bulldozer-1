@@ -30,7 +30,7 @@ const SignUpPage = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    AuthApi.login(fields.username, fields.password)
+    AuthApi.login(fields.email, fields.password)
       .then((response) => {
         console.log('logged in', response);
       })
