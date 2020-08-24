@@ -26,13 +26,18 @@
 
 ```
 server
-│   app.js          # App entry point
-└───api             # Express route controllers for all the endpoints of the app
-└───config          # Environment variables and configuration related stuff
-└───loaders         # Split the startup process into modules
-└───models          # Database models
-└───services        # All the business logic is here
-└───subscribers     # Event handlers for async task
+├─── requests.http        # Manual test examples for API endpoints
+├─── src
+│    ├─── app.js          # Bundle Express app
+│    ├─── bin
+│    │     └─── www.js    # App entry point (HTTP Server)
+│    ├─── config          # Environment variables and configuration related stuff
+│    ├─── loaders         # Split the startup process into modules
+│    ├─── models          # Database models
+│    ├─── routes          # Express route controllers for all the endpoints of the app
+│    ├─── services        # All the business logic is here
+│    └─── validators      # Validate user input + middleware
+└─── test                 # Unit Test specs
 ```
 
 ### Starting MongoDB server locally (Docker)

@@ -1,7 +1,9 @@
 const passport = require('passport');
-const { validationResult } = require('express-validator');
 
-const User = require('../models/user');
+const { User } = require('../models/user');
+
+// TODO: Put in settings somewhere
+const defaultCrawlers = ['reddit', 'twitter'];
 
 function Authenticate(req, res, next, statusCode) {
   passport.authenticate('local', (err, user) => {
@@ -14,7 +16,8 @@ function Authenticate(req, res, next, statusCode) {
       const dbUser = await User.findOne({ _id: user._id }, {
         hash: false,
         salt: false,
-      });
+        __v: false,
+      }).lean();
       return res.status(statusCode).send(dbUser);
     });
 
@@ -22,11 +25,7 @@ function Authenticate(req, res, next, statusCode) {
   })(req, res, next);
 }
 
-exports.SignUp = async function test(req, res, next) {
-  const errors = validationResult(req);
-  if (errors.errors.length > 0) {
-    return res.status(400).send({ errors: errors.errors });
-  }
+exports.SignUp = async (req, res, next) => {
   const { username } = req.body;
   const userExists = await User.exists({ username });
   if (userExists) {
@@ -36,7 +35,14 @@ exports.SignUp = async function test(req, res, next) {
   const { password, companyName } = req.body;
 
   // Create document
-  const user = new User({ username, companyName, password });
+  const user = new User({
+    username,
+    password,
+    companyName,
+    email: username,
+    terms: [companyName],
+    crawlers: defaultCrawlers,
+  });
   await user.setPassword(password);
   await user.save();
 
@@ -47,9 +53,29 @@ exports.Login = async (req, res, next) => {
   Authenticate(req, res, next, 200);
 };
 
+exports.Logout = async (req, res) => {
+  req.logout();
+  return res.status(200).send();
+};
+
 exports.Self = async (req, res) => {
-  if (!req.user) {
-    return res.status(401).send();
+  res.status(200).send(req.user);
+};
+
+exports.UpdateProfile = async (req, res) => {
+  const { terms, email, crawlers } = req.body;
+  const obj = {
+    email,
+    terms: terms && [...new Set(terms)],
+    crawlers: crawlers && [...new Set(crawlers)],
+  };
+
+  // TODO: add to utility class (remove undefined keys)
+  Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
+
+  if (Object.keys(obj).length > 0) {
+    await User.updateOne({ _id: req.user._id }, obj).exec();
+    return res.status(202).send();
   }
-  return res.status(200).send(req.user);
+  return res.status(200).send();
 };

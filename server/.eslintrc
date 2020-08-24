@@ -1,6 +1,24 @@
 {
     "extends": "airbnb-base",
+    "env": {
+        "commonjs": true,
+        "node": true,
+        "mocha": true
+    },
     "rules": {
-        "no-underscore-dangle": "off"
+        "no-underscore-dangle": "off",
+        "linebreak-style": "off"
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [
+                    ".js",
+                    ".jsx",
+                    ".ts",
+                    ".tsx"
+                ]
+            }
+        }
     }
-}  
+}

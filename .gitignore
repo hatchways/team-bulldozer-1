@@ -21,3 +21,9 @@ yarn-error.log*
 .env
 
 mongodb-binaries/*
+
+server/build/
+
+server/.nyc_output/
+
+server/reports/

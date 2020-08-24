@@ -5,20 +5,31 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug this file",
+            "program": "nodemon",
+            "args": [
+                "${file}"
+            ],
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
             "name": "Debug Server",
             "cwd": "${workspaceFolder}",
             "envFile": "${workspaceFolder}/.env",
             "request": "launch",
             "runtimeArgs": [
                 "run-script",
-                "dev"
+                "start:dev"
             ],
             "runtimeExecutable": "npm",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "node",
-            "port": 12345,
+            "type": "node"
         },
         {
             "type": "node",
@@ -29,7 +40,7 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/test"
+                "${workspaceFolder}/src/test"
             ],
             "runtimeArgs": [
                 "--require=dotenv/config"
