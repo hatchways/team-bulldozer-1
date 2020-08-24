@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import { Button, Snackbar, TextField } from '@material-ui/core'
+import React, { useState, useContext } from 'react';
+import { Button, Snackbar, TextField } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
-import SignedOutPageHeader from '../components/SignedOutPageHeader';
+
 import AuthApi from '../utils/api/AuthApi';
-import { Alert } from '@material-ui/lab'
+import { UserContext } from '../contexts/User';
+
+import SignedOutPageHeader from '../components/SignedOutPageHeader';
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -17,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 const SignUpPage = () => {
   const classes = useStyles();
 
+  const user = useContext(UserContext);
   const [fields, setFields] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
 
@@ -30,9 +34,9 @@ const SignUpPage = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    AuthApi.login(fields.username, fields.password)
+    AuthApi.login(fields.email, fields.password)
       .then((response) => {
-        console.log('logged in', response);
+        user.setUser(response.data);
       })
       .catch((error) => {
         if (error.response && error.response.status === 400) {

@@ -26,4 +26,18 @@ export default class AuthApi {
       data: makeSearchParamsFromData({ username, companyName, password }),
     });
   }
+
+  static getProfileInfo() {
+    return axios({
+      url: `${API_URL}/auth/me`,
+      method: 'GET',
+    });
+  }
+
+  static logout() {
+    return axios({
+      url: `${API_URL}/auth/logout`,
+      method: 'GET',
+    });
+  }
 }
