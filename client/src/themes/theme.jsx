@@ -32,7 +32,7 @@ export default createMuiTheme({
       },
       outlined: {
         padding: buttonPadding,
-        borderWidth: '2px',
+        borderWidth: 2,
       },
     },
     MuiOutlinedInput: {
@@ -44,6 +44,29 @@ export default createMuiTheme({
       root: {
         width: '100%',
       },
+    },
+    MuiSwitch: {
+      root: {
+        width: 68,
+        height: 48,
+      },
+      track: {
+        backgroundColor: '#BDC7D4',
+        borderRadius: 100,
+        opacity: 1,
+      },
+      thumb: {
+        width: 16,
+        height: 16,
+        backgroundColor: 'white',
+      },
+      switchBase: {
+        padding: '16px 16px',
+        '&.Mui-checked + .MuiSwitch-track': {
+          opacity: 1,
+        },
+      },
+
     },
   },
 });

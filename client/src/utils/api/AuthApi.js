@@ -26,6 +26,15 @@ export default class AuthApi {
     });
   }
 
+  static setProfileInfo(toSet) {
+    console.log(toSet);
+    return axios({
+      url: `${API_URL}/auth/me`,
+      method: 'PATCH',
+      data: toSet,
+    });
+  }
+
   static logout() {
     return axios({
       url: `${API_URL}/auth/logout`,

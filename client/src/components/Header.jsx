@@ -4,11 +4,13 @@ import { Link } from 'react-router-dom';
 import {
   AppBar,
   Button,
+  IconButton,
   InputBase,
   Toolbar,
   Typography,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import SettingsIcon from '@material-ui/icons/Settings';
 import { makeStyles } from '@material-ui/core/styles';
 
 import logo from '../assets/img/logo.svg';
@@ -64,7 +66,14 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     color: theme.palette.common.black,
     [theme.breakpoints.up('md')]: {
-      width: '20ch',
+      width: '40ch',
+    },
+  },
+  settings: {
+    color: theme.palette.common.white,
+    opacity: 0.35,
+    '&:hover': {
+      opacity: 1,
     },
   },
   toolbar: {
@@ -82,8 +91,9 @@ const Header = ({ isLandingPage, isSignedIn }) => {
         <Toolbar className={classes.toolbar}>
           <Link to="/"><img className={classes.logo} src={logo} alt="Mentions Crawler Logo" /></Link>
           {isSignedIn
-            ? <div>
-                <div class={classes.search}>
+            ? (
+              <>
+                <div className={classes.search}>
                   <InputBase
                     placeholder="Search in your mentions"
                     classes={{
@@ -95,7 +105,15 @@ const Header = ({ isLandingPage, isSignedIn }) => {
                     <SearchIcon color="primary" />
                   </div>
                 </div>
-              </div>
+                <IconButton
+                  component={Link}
+                  to="/settings"
+                  className={classes.settings}
+                >
+                  <SettingsIcon className={classes.settingsIcon} />
+                </IconButton>
+              </>
+            )
             : (
               <div className={classes.ctaWrapper}>
                 <Typography className={classes.ctaText}>
@@ -122,7 +140,7 @@ Header.propTypes = {
   isSignedIn: PropTypes.bool,
 };
 
-Header.defaultProps= {
+Header.defaultProps = {
   isLandingPage: false,
   isSignedIn: false,
 };

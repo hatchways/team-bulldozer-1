@@ -7,9 +7,12 @@ import theme from './themes/theme';
 import { UserProvider } from './contexts/User';
 
 import DashboardPage from './pages/DashboardPage';
-import WrappedRoute from './components/WrappedRoute';
+import SettingsPage from './pages/SettingsPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
+import WrappedRoute from './components/WrappedRoute';
+import ProviderSidebar from './components/sidebars/ProviderSidebar';
+import SettingsSidebar from './components/sidebars/SettingsSidebar';
 
 const App = () => {
   return (
@@ -19,7 +22,8 @@ const App = () => {
         <BrowserRouter>
           <WrappedRoute path="/" component={SignUpPage} layoutProps={{ isLandingPage: true }} exact />
           <WrappedRoute path="/sign-in" component={SignInPage} />
-          <WrappedRoute path="/dashboard" component={DashboardPage} isPrivateRoute />
+          <WrappedRoute path="/dashboard" component={DashboardPage} layoutProps={{ sidebar: <ProviderSidebar /> }} isPrivateRoute />
+          <WrappedRoute path="/settings" component={SettingsPage} layoutProps={{ sidebar: <SettingsSidebar /> }} isPrivateRoute />
         </BrowserRouter>
       </UserProvider>
     </MuiThemeProvider>

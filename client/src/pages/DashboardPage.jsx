@@ -2,7 +2,7 @@ import React from 'react';
 
 const DashboardPage = () => (
   <main>
-    <h1>Dashboard Page</h1>
+    <h1>My Mentions</h1>
   </main>
 );
 
