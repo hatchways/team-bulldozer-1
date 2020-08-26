@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(3),
       width: 'auto',
     },
+    [theme.breakpoints.up('lg')]: {
+      marginLeft: 210,
+    },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
@@ -70,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     color: theme.palette.common.black,
     [theme.breakpoints.up('md')]: {
-      width: '40ch',
+      width: '63ch',
     },
   },
   settings: {

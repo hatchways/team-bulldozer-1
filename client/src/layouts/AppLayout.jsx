@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Header from '../components/Header';
 
 const useStyles = makeStyles((theme) => {
-  const sidebarBorder = `2px solid ${theme.palette.gray.main}`;
+  const sidebarBorder = `2px solid ${theme.palette.gray.light}`;
   return {
     root: {
       paddingTop: 100,
@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => {
       },
     },
     content: {
+      maxWidth: 1100,
       padding: theme.spacing(3),
       [theme.breakpoints.up('md')]: {
         padding: theme.spacing(4),

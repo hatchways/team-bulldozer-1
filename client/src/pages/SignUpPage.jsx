@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react'
 import { Button, TextField, Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import SignedOutPageHeader from '../components/SignedOutPageHeader';
 import AuthApi from '../utils/api/AuthApi';
+import { UserContext } from '../contexts/User'
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -17,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
 const SignUpPage = () => {
   const classes = useStyles();
 
+  const { setUser } = useContext(UserContext);
   const [fields, setFields] = useState({
     username: '', companyName: '', password: '', passwordRepeat: '',
   });
@@ -57,7 +59,7 @@ const SignUpPage = () => {
     if (validate()) {
       AuthApi.register(fields.username, fields.companyName, fields.password)
         .then((response) => {
-          console.log('res', response); // TODO - store me in context plz
+          setUser(response.data);
         })
         .catch((error) => {
           const errorData = error.response.data;
