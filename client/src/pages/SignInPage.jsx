@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 const SignUpPage = () => {
   const classes = useStyles();
 
-  const user = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const [fields, setFields] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
 
@@ -36,7 +36,7 @@ const SignUpPage = () => {
     event.preventDefault();
     AuthApi.login(fields.email, fields.password)
       .then((response) => {
-        user.setUser(response.data);
+        setUser(response.data);
       })
       .catch((error) => {
         if (error.response && error.response.status === 400) {

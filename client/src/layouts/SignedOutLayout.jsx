@@ -1,14 +1,12 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Snackbar } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 
-import AuthApi from '../utils/api/AuthApi';
 import { UserContext } from '../contexts/User';
 
 import Header from '../components/Header';
-import { Alert } from '@material-ui/lab'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,24 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SignedOutLayout = ({ children, isLandingPage }) => {
   const classes = useStyles();
-  const { user, setUser } = useContext(UserContext);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (!user) {
-      AuthApi.getProfileInfo()
-        .then((response) => {
-          setUser(response.data);
-        })
-        .catch((err) => {
-          if (!err.response || err.response.status !== 401) {
-            setError('An unexpected error occurred while contacting the API.');
-          }
-        });
-    }
-  }, [user, setUser]);
-
-  const handleErrorClose = () => { setError(''); };
+  const { user } = useContext(UserContext);
 
   return user
     ? <Redirect to="/dashboard" />
@@ -59,13 +40,6 @@ const SignedOutLayout = ({ children, isLandingPage }) => {
         <Container className={classes.container} maxWidth="sm">
           { children }
         </Container>
-        {!!error ? (
-          <Snackbar open={!!error} onClose={handleErrorClose} autoHideDuration={2000}>
-            <Alert severity="error">
-              { error }
-            </Alert>
-          </Snackbar>
-        ) : null }
       </div>
     );
 };
