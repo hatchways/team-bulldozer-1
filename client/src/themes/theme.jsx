@@ -7,6 +7,7 @@ export default createMuiTheme({
   palette: {
     background: { default: '#FAFBFF' },
     primary: { main: primaryColor },
+    gray: { main: '#E9EDFA' },
   },
   shape: {
     borderRadius: 100,

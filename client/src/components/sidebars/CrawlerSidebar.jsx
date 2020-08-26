@@ -7,12 +7,12 @@ import AuthApi from '../../utils/api/AuthApi'
 
 import CrawlerSwitch from '../CrawlerSwitch';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   item: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: '2px solid #E9EDFA',
+    borderBottom: `2px solid ${theme.palette.gray.main}`,
     '&:last-child': {
       borderBottom: 0,
     },

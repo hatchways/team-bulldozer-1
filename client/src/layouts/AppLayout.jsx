@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Header from '../components/Header';
 
 const useStyles = makeStyles((theme) => {
-  const sidebarBorder = '2px solid #E9EDFA';
+  const sidebarBorder = `2px solid ${theme.palette.gray.main}`;
   return {
     root: {
       paddingTop: 100,
