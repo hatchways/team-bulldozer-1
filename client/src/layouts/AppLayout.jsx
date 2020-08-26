@@ -5,29 +5,35 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Header from '../components/Header';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    paddingTop: 100,
-  },
-  sidebar: {
-    background: theme.palette.common.white,
-    padding: theme.spacing(0, 4),
-    [theme.breakpoints.up('md')]: {
-      position: 'fixed',
-      top: 100,
-      bottom: 0,
-      left: 0,
-      width: 375,
+const useStyles = makeStyles((theme) => {
+  const sidebarBorder = '2px solid #E9EDFA';
+  return {
+    root: {
+      paddingTop: 100,
     },
-  },
-  content: {
-    padding: theme.spacing(3),
-    [theme.breakpoints.up('md')]: {
-      padding: theme.spacing(4),
-      paddingLeft: 375,
+    sidebar: {
+      background: theme.palette.common.white,
+      borderBottom: sidebarBorder,
+      padding: theme.spacing(0, 4),
+      [theme.breakpoints.up('md')]: {
+        position: 'fixed',
+        top: 100,
+        bottom: 0,
+        left: 0,
+        width: 375,
+        borderBottom: 0,
+        borderRight: sidebarBorder,
+      },
     },
-  },
-}));
+    content: {
+      padding: theme.spacing(3),
+      [theme.breakpoints.up('md')]: {
+        padding: theme.spacing(4),
+        paddingLeft: 375,
+      },
+    },
+  };
+});
 
 const AppLayout = ({ children, sidebar }) => {
   const classes = useStyles();

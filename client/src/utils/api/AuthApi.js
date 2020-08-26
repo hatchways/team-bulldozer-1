@@ -27,7 +27,6 @@ export default class AuthApi {
   }
 
   static setProfileInfo(toSet) {
-    console.log(toSet);
     return axios({
       url: `${API_URL}/auth/me`,
       method: 'PATCH',
@@ -38,7 +37,7 @@ export default class AuthApi {
   static logout() {
     return axios({
       url: `${API_URL}/auth/logout`,
-      method: 'GET',
+      method: 'POST',
     });
   }
 }

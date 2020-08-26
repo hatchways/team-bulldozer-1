@@ -34,7 +34,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   logo: {
-    width: '172px',
+    width: 172,
+    marginRight: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      width: 90,
+    },
   },
   search: {
     position: 'relative',
@@ -78,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     justifyContent: 'space-between',
-    minHeight: '100px',
+    minHeight: 100,
   },
 }));
 

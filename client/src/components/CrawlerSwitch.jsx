@@ -20,26 +20,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProviderSwitch = ({ checked, onChange, provider }) => {
+const CrawlerSwitch = ({ checked, crawler, onChange }) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <img className={classes.image} src={provider.logo} alt={`Logo for ${provider.logo}`} />
-      <div className={classes.label}>{ provider.label }</div>
+      <img className={classes.image} src={crawler.logo} alt={`Logo for ${crawler.logo}`} />
+      <div className={classes.label}>{ crawler.label }</div>
       <Switch className={classes.switch} color="primary" checked={checked} onChange={onChange} />
     </div>
   );
 };
 
-ProviderSwitch.propTypes = {
+CrawlerSwitch.propTypes = {
   checked: PropTypes.bool.isRequired,
   onChange: PropTypes.func,
-  provider: PropTypes.object.isRequired,
+  crawler: PropTypes.object.isRequired,
 };
 
-ProviderSwitch.defaultProps = {
+CrawlerSwitch.defaultProps = {
   onChange: () => {},
 };
 
-export default ProviderSwitch;
+export default CrawlerSwitch;

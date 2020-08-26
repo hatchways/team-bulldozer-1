@@ -12,8 +12,8 @@ import { Alert } from '@material-ui/lab'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: '150px',
-    paddingBottom: '50px',
+    paddingTop: 150,
+    paddingBottom: 50,
   },
   container: {
     backgroundColor: 'white',
@@ -43,7 +43,7 @@ const SignedOutLayout = ({ children, isLandingPage }) => {
         })
         .catch((err) => {
           if (!err.response || err.response.status !== 401) {
-            setError('An unexpected error occured while contacting the API.');
+            setError('An unexpected error occurred while contacting the API.');
           }
         });
     }
