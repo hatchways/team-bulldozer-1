@@ -48,7 +48,13 @@ server
   - [Redis](https://hub.docker.com/_/redis)
   - [Docker-compose](https://docs.docker.com/compose/gettingstarted/)
 
-To start all backend services at once (including backend). Service will be available at http://localhost:3001
+First, in the `/server` folder :
+
+1. Copy `.env.example` to `.env`
+2. Change api keys in `.env` file
+    - Get your own [Twitter API](https://developer.twitter.com/en/apps) key
+
+To start all backend services at once. Service will be available at http://localhost:3001
 
 ```
 docker-compose up -d
@@ -66,7 +72,7 @@ To update backend container
 docker-compose build
 ```
 
-Once done (clean up resources))
+Clean up resources
 
 ```
 docker-compose down
@@ -77,9 +83,12 @@ docker-compose down
 
 In the `/server` folder
 
-1. Start mandatory services: `docker-compose up -d redis mongo`
-2. Install dependencies with `npm install`
-3. To run:
+1. Copy `.env.example` to `.env`
+2. Change api keys in `.env` file
+    - Get your own [Twitter API](https://developer.twitter.com/en/apps) key
+3. Start mandatory services: `docker-compose up -d redis mongo`
+4. Install dependencies with `npm install`
+5. To run:
     * Run `npm run debug` to start the backend locally with hot reload on `http://localhost:3001`
     * Run `npm test` to run unit tests
 
