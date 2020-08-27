@@ -11,10 +11,12 @@
 - MongoDB + [Mongoose](https://mongoosejs.com/docs/) + [Passport-JS](http://www.passportjs.org/)
 - Express.js
 - Node.js
-    - [Search tweets](https://developer.twitter.com/en/docs/tweets/search/overview) : free is limited in time range but faster to implement
-    - [Twitter feed source api](https://developer.twitter.com/en/docs/tweets/filter-realtime/overview) : Best of all, allow real-time capture of tweets. Needs a running worker, can't be deployed to serverless
+    - [Search tweets](https://developer.twitter.com/en/docs/tweets/search/overview): free is limited in time range but faster to implement
+    - [Twitter feed source api](https://developer.twitter.com/en/docs/tweets/filter-realtime/overview): Best of all, allow real-time capture of tweets. Needs a running worker, can't be deployed to serverless
     - [Reddit Search API](https://www.reddit.com/dev/api/#GET_search)
       - [reddit npm](https://www.npmjs.com/package/reddit)
+    - [Bull](https://github.com/OptimalBits/bull): redis based queue
+    
 - React (bootstraped with [create-react-app](https://create-react-app.dev/)) 
     - [Material-UI](https://material-ui.com/) is used for UI components
     - All styles are authored using [JSS](https://cssinjs.org/) using Material UI's wrappers
@@ -40,26 +42,44 @@ server
 └─── test                 # Unit Test specs
 ```
 
-### Starting MongoDB server locally (Docker)
+### Starting Backend server containers locally (Docker)
 
-  - [Reference](https://hub.docker.com/_/mongo)
+  - [Mongo](https://hub.docker.com/_/mongo)
+  - [Redis](https://hub.docker.com/_/redis)
+  - [Docker-compose](https://docs.docker.com/compose/gettingstarted/)
 
-```
-docker run --name hatchways-mongo -p 27017:27017 -d mongo:4.4-bionic
-```
-
-### Starting redis server locally (Docker)
-
-  - [Reference](https://hub.docker.com/_/redis)
+To start all backend services at once (including backend). Service will be available at http://localhost:3001
 
 ```
-docker run --name hatchways-redis -p 6379:6379 -d redis:6-alpine
+docker-compose up -d
 ```
+
+To start redis and mongo only (for backend dev)
+
+```
+docker-compose up -d redis mongo
+```
+
+To update backend container
+
+```
+docker-compose build
+```
+
+Once done (clean up resources))
+
+```
+docker-compose down
+```
+
 
 ### Starting the backend
 
-1. In the `/server` folder, install dependencies with `npm install`
-2. To run:
+In the `/server` folder
+
+1. Start mandatory services: `docker-compose up -d redis mongo`
+2. Install dependencies with `npm install`
+3. To run:
     * Run `npm run debug` to start the backend locally with hot reload on `http://localhost:3001`
     * Run `npm test` to run unit tests
 
