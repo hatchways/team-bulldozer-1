@@ -10,15 +10,18 @@ const options = {
   useFindAndModify: false,
 };
 
+let { uri } = config.uri;
+
 if (process.env.NODE_ENV === 'test') {
   /* eslint-disable import/no-extraneous-dependencies */
   const { MongoMemoryServer } = require('mongodb-memory-server');
   const mongoServer = new MongoMemoryServer();
-  mongoServer.getUri().then((mongoUri) => {
-    mongoose.connect(mongoUri, options);
-  });
+  (async () => {
+    uri = await mongoServer.getUri();
+    mongoose.connect(uri, options);
+  })();
 } else {
-  mongoose.connect(config.uri, options);
+  mongoose.connect(uri, options);
 }
 
 module.exports = mongoose;
