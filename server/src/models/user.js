@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+const passportLocalMongoose = require('passport-local-mongoose');
+const mongoose = require('../config/mongoose');
 
 const { Schema } = mongoose;
-const passportLocalMongoose = require('passport-local-mongoose');
 
 const User = new Schema({
   username: {

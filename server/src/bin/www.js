@@ -11,12 +11,13 @@ require('dotenv').config();
  */
 const http = require('http');
 const app = require('../app');
+const config = require('../config');
 
 /**
  * Get port from environment and store in Express.
  */
-const port = normalizePort(process.env.PORT) || '3001';
-app.set('port', port);
+const { port } = config.web;
+app.set('port', config.web.port);
 
 /**
  * Create HTTP server.
@@ -29,26 +30,6 @@ const server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
-function normalizePort(val) {
-  const normalizedPort = parseInt(val, 10);
-
-  // eslint-disable-next-line no-restricted-globals
-  if (isNaN(normalizedPort) === true) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
 
 /**
  * Event listener for HTTP server "error" event.

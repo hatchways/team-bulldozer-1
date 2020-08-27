@@ -3,9 +3,11 @@ const logger = require('morgan');
 
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const { join } = require('path');
+
+const config = require('../config');
 
 const { json, urlencoded } = express;
-const { join } = require('path');
 
 module.exports = async (app) => {
   app.use(logger('dev'));
@@ -15,7 +17,7 @@ module.exports = async (app) => {
   app.use(express.static(join(__dirname, 'public')));
 
   app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: config.web.session_secret,
     resave: true,
     saveUninitialized: false,
   }));

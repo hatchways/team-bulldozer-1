@@ -48,6 +48,14 @@ server
 docker run --name hatchways-mongo -p 27017:27017 -d mongo:4.4-bionic
 ```
 
+### Starting redis server locally (Docker)
+
+  - [Reference](https://hub.docker.com/_/redis)
+
+```
+docker run --name hatchways-redis -p 6379:6379 -d redis:6-alpine
+```
+
 ### Starting the backend
 
 1. In the `/server` folder, install dependencies with `npm install`

@@ -1,18 +1,24 @@
 /* eslint-disable global-require */
 const mongoose = require('mongoose');
 
-mongoose.set('useCreateIndex', true);
+const config = require('./index').mongo;
+
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+};
 
 if (process.env.NODE_ENV === 'test') {
   /* eslint-disable import/no-extraneous-dependencies */
   const { MongoMemoryServer } = require('mongodb-memory-server');
   const mongoServer = new MongoMemoryServer();
   mongoServer.getUri().then((mongoUri) => {
-    mongoose
-      .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+    mongoose.connect(mongoUri, options);
   });
 } else {
-  mongoose.connect(process.env.MONGO_DB, {
-    useNewUrlParser: true, useUnifiedTopology: true,
-  });
+  mongoose.connect(config.uri, options);
 }
+
+module.exports = mongoose;

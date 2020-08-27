@@ -8,7 +8,7 @@ module.exports = (app) => {
   // Validate mandatory env VARS
   require('./env').Validate();
 
-  require('./mongoose');
+  require('./cron')();
 
   // Load express modules
   require('./express')(app);
