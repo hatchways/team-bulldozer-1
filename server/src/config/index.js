@@ -1,7 +1,7 @@
 const config = {
   web: {
     port: process.env.PORT || 3001,
-    session_secret: process.env.SESSION_SECRET || '',
+    session_secret: process.env.SESSION_SECRET || 'CHANGE ME',
   },
   cron: {
     // Repeat job once every day at 3:00 (am)

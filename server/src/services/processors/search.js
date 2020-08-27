@@ -79,7 +79,7 @@ async function processSearchJob(job, done) {
 
     done(null, records);
   } catch (error) {
-    throw new Error(error);
+    // console.error(error);
   }
 }
 

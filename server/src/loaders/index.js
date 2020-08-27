@@ -5,9 +5,6 @@
  * in the main app.js
  */
 module.exports = (app) => {
-  // Validate mandatory env VARS
-  require('./env').Validate();
-
   require('./cron')();
 
   // Load express modules
