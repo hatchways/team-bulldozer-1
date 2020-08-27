@@ -1,12 +1,21 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable arrow-body-style */
-const redditCrawler = {};
-redditCrawler.name = 'reddit';
-redditCrawler.findPopular = (term) => {
-  return 'reddit';
+const crawler = {};
+crawler.name = 'reddit';
+crawler.findPopular = (term) => {
+  return ['reddit'];
 };
-redditCrawler.findRecent = (term) => {
-  return 'reddit';
+crawler.findRecent = (term) => {
+  return ['reddit'];
 };
-
-module.exports = { crawler: redditCrawler };
+crawler.convert = (type, obj) => [
+  {
+    source: this.name,
+    type,
+    title: '',
+    body: '',
+    url: 'http://',
+    thumbnail: 'http://',
+  },
+];
+module.exports = { crawler };

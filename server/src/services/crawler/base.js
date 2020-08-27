@@ -10,6 +10,8 @@ class CrawlerBase {
     this.name = name;
   }
 
+  convert(type, obj) {}
+
   getName() {
     return this.name;
   }

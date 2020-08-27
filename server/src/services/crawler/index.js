@@ -6,7 +6,7 @@ const { readdirSync } = require('fs');
 /**
  * Provide abstraction to implemented crawlers
  */
-class CrawlerService {
+class CrawlerLoaderService {
   constructor(name) {
     this.name = name;
     this.crawlerList = undefined;
@@ -53,7 +53,7 @@ class CrawlerService {
     const { crawler } = require(path);
 
     // pseudo expected interface/attributes
-    const methodNames = ['name', 'findPopular', 'findRecent'];
+    const methodNames = ['name', 'findPopular', 'findRecent', 'convert'];
 
     const keys = Object.keys(crawler)
       .filter((key) => methodNames.indexOf([key]));
@@ -75,4 +75,4 @@ class CrawlerService {
   }
 }
 
-module.exports = { CrawlerService };
+module.exports = { CrawlerLoaderService };

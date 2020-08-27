@@ -1,38 +1,40 @@
-const Twit = require('twit');
+const Twitter = require('twitter');
+const config = require('../../../config').twitter;
 
-const T = new Twit({
-  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-  access_token: process.env.TWITTER_TOKEN,
-  access_token_secret: process.env.TWITTER_TOKEN_SECRET,
-  timeout_ms: 60 * 1000, // optional HTTP request timeout to apply to all requests.
-  strictSSL: true, // optional - requires SSL certificates to be valid.
+const client = new Twitter({
+  consumer_key: config.consumer_key,
+  consumer_secret: config.consumer_secret,
+  access_token_key: config.token,
+  access_token_secret: config.token_secret,
 });
 
-const twitterCrawler = {};
-twitterCrawler.name = 'twitter';
-twitterCrawler.findPopular = async (term) => {
-  // TODO : Sanitize input
-  const tweets = await T.get('search/tweets', {
-    q: term,
-    count: 10,
-    result_type: 'popular',
-  });
+const crawler = {};
+crawler.name = 'twitter';
 
-  return tweets.data.statuses;
-};
-twitterCrawler.findRecent = async (term) => {
-  // TODO : Sanitize input
-  const tweets = await T.get('search/tweets', {
-    q: term,
-    count: 10,
-    result_type: 'recent',
-  });
+async function searchTweets(term, type) {
+  const query = {
+    q: escape(term),
+    count: 50,
+    result_type: escape(type),
+  };
+  const tweets = await client.get('search/tweets', query);
+  return tweets.statuses.map((result) => crawler.convert(query.result_type, result));
+}
 
-  return tweets.data.statuses;
-};
+crawler.convert = (type, obj) => ({
+  // TODO: Fetch full length body if (obj.truncated === true)
+  source: crawler.name,
+  type,
+  title: obj.text,
+  body: obj.text,
+  url: `https://twitter.com/i/web/status/${obj.id_str}`,
+  thumbnail: obj.user.profile_image_url_https,
+});
 
-module.exports = { crawler: twitterCrawler };
+crawler.findPopular = async (term) => searchTweets(term, 'popular');
+crawler.findRecent = async (term) => searchTweets(term, 'recent');
+
+module.exports = { crawler };
 
 /**
  * Ensure all parameters are properly URL encoded.
