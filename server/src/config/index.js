@@ -17,8 +17,7 @@ const config = {
     token_secret: process.env.TWITTER_TOKEN_SECRET || 'TWITTER_TOKEN_SECRET',
   },
   redis: {
-    host: process.env.REDIS_HOSTNAME || 'localhost',
-    port: process.env.REDIS_PORT || 6379,
+    uri: process.env.REDIS_URI || 'redis://127.0.0.1:6379',
   },
 };
 

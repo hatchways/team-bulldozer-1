@@ -6,8 +6,8 @@
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/bin/www.js",
     "start:dev": "nodemon ./src/bin/www.js",
-    "start:dev:test": "./node_modules/.bin/mocha ./src/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --timeout 30000",
-    "start:test": "./node_modules/.bin/mocha ./build/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml",
+    "start:dev:test": "cross-env MONGO_DB=mongodb://localhost/archibald-tests mocha ./src/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --timeout 30000",
+    "start:test": "cross-env MONGO_DB=mongodb://localhost/archibald-tests mocha ./src/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --exit --timeout 10000 --reporter-options mochaFile=./reports/mocha.xml",
     "start:coverage": "node ./node_modules/nyc/bin/nyc.js ./node_modules/.bin/mocha ./build/**/*.spec.js ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml",
     "start:lint": "eslint ./src/"
   },
@@ -27,8 +27,7 @@
     "express-session": "^1.17.1",
     "express-validator": "^6.6.1",
     "http-errors": "^1.8.0",
-    "mongodb-memory-server": "^6.6.6",
-    "mongoose": "^5.10.0",
+    "mongoose": "^5.10.1",
     "morgan": "~1.10.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
@@ -37,9 +36,10 @@
     "twitter": "^1.7.1"
   },
   "devDependencies": {
-    "@types/node": "^14.6.0",
+    "@types/node": "^14.6.1",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "cross-env": "^7.0.2",
     "eslint": "^7.7.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-airbnb-base": "^14.2.0",

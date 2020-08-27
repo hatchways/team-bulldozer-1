@@ -5,8 +5,7 @@ jobs: # a collection of steps
       - image: circleci/node:14.8-stretch # ...with this image as the primary container; this is where all `steps` will run
         environment:
           MONGO_DB: mongodb://localhost
-          REDIS_HOSTNAME: localhost
-          REDIS_PORT: 6379
+          REDIS_URI: redis://127.0.0.1:6379
       - image: mongo:4.4-bionic # and this image as the secondary service container
       - image: redis:6-alpine # and this image as the 3rd service container
     steps: # a collection of executable commands
@@ -17,16 +16,16 @@ jobs: # a collection of steps
       - run:
           name: update-npm
           command: "sudo n stable"
-      - restore_cache: # special step to restore the dependency cache
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key: dependency-cache-{{ checksum "server/package.json" }}
+      # - restore_cache: # special step to restore the dependency cache
+      #     # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+      #     key: dependency-cache-{{ checksum "server/package.json" }}
       - run:
           name: install-npm-wee
           command: cd server && npm install
-      - save_cache: # special step to save the dependency cache
-          key: dependency-cache-{{ checksum "server/package.json" }}
-          paths:
-            - server/node_modules
+      # - save_cache: # special step to save the dependency cache
+      #     key: dependency-cache-{{ checksum "server/package.json" }}
+      #     paths:
+      #       - server/node_modules
       - run:
           name: export-linter-result
           command: |
@@ -46,14 +45,17 @@ jobs: # a collection of steps
           environment:
             DOCKERIZE_VERSION: v0.6.1
       - run:
-          name: Wait for db
+          name: Wait for redis
           command: dockerize -wait tcp://localhost:6379 -timeout 1m
       - run:
+          name: Wait for mongodb
+          command: dockerize -wait tcp://localhost:27017 -timeout 1m
+      - run:
           name: export-test-result
+          environment:
+            NODE_ENV: test
           command: |
-            cd server
-            mkdir -p ./reports
-            mocha ./build/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --exit --timeout 10000 --reporter-options mochaFile=./reports/mocha.xml
+            cd server && npm run start:test
           when: always
       - store_test_results:
           path: ./server/src/coverage

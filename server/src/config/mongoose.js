@@ -8,20 +8,9 @@ const options = {
   useUnifiedTopology: true,
   useCreateIndex: true,
   useFindAndModify: false,
+  connectTimeoutMS: 1000,
 };
 
-let { uri } = config.uri;
-
-if (process.env.NODE_ENV === 'test') {
-  /* eslint-disable import/no-extraneous-dependencies */
-  const { MongoMemoryServer } = require('mongodb-memory-server');
-  const mongoServer = new MongoMemoryServer();
-  (async () => {
-    uri = await mongoServer.getUri();
-    mongoose.connect(uri, options);
-  })();
-} else {
-  mongoose.connect(uri, options);
-}
+mongoose.connect(config.uri, options);
 
 module.exports = mongoose;

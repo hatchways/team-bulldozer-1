@@ -18,9 +18,10 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('auth', () => {
-  before(() => {
-    if (User.find({}).count > 0) {
-      User.collection.drop();
+  before(async () => {
+    const count = await User.count({});
+    if (count > 0) {
+      await User.deleteMany({});
     }
   });
 
@@ -48,6 +49,7 @@ describe('auth', () => {
         .post('/auth/register/')
         .send(objectToSend).then((result) => {
           should.not.exist(result.err);
+          // should.not.exist(result.error);
           result.should.have.status(expectedStatusCode);
           done();
         });
