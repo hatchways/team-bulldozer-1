@@ -11,15 +11,5 @@ const options = {
 };
 
 mongoose.connect(config.uri, options);
-// if (process.env.NODE_ENV === 'test') {
-//   /* eslint-disable import/no-extraneous-dependencies */
-//   const { MongoMemoryServer } = require('mongodb-memory-server');
-//   const mongoServer = new MongoMemoryServer();
-//   mongoServer.getUri().then((mongoUri) => {
-//     mongoose.connect(mongoUri, options);
-//   });
-// } else {
-//   mongoose.connect(config.uri, options);
-// }
 
 module.exports = mongoose;
