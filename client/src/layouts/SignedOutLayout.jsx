@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container } from '@material-ui/core';
+
+import { UserContext } from '../contexts/User';
 
 import Header from '../components/Header';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: '150px',
-    paddingBottom: '50px',
+    paddingTop: 150,
+    paddingBottom: 50,
   },
   container: {
     backgroundColor: 'white',
@@ -27,15 +30,18 @@ const useStyles = makeStyles((theme) => ({
 
 const SignedOutLayout = ({ children, isLandingPage }) => {
   const classes = useStyles();
+  const { user } = useContext(UserContext);
 
-  return (
-    <div className={classes.root}>
-      <Header isLandingPage={isLandingPage} />
-      <Container className={classes.container} maxWidth="sm">
-        { children }
-      </Container>
-    </div>
-  );
+  return user
+    ? <Redirect to="/dashboard" />
+    : (
+      <div className={classes.root}>
+        <Header isLandingPage={isLandingPage} />
+        <Container className={classes.container} maxWidth="sm">
+          { children }
+        </Container>
+      </div>
+    );
 };
 
 SignedOutLayout.propTypes = {

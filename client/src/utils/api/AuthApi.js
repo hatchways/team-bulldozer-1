@@ -18,4 +18,26 @@ export default class AuthApi {
       data: { username, companyName, password },
     });
   }
+
+  static getProfileInfo() {
+    return axios({
+      url: `${API_URL}/auth/me`,
+      method: 'GET',
+    });
+  }
+
+  static setProfileInfo(toSet) {
+    return axios({
+      url: `${API_URL}/auth/me`,
+      method: 'PATCH',
+      data: toSet,
+    });
+  }
+
+  static logout() {
+    return axios({
+      url: `${API_URL}/auth/logout`,
+      method: 'POST',
+    });
+  }
 }

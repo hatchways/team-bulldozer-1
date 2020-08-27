@@ -70,6 +70,7 @@ client
 ├───├───themes          # Material UI theme definition
 ├───├───utils           # Non-React JS code and classes to support the components
 ├───├───├───api         #   - Static classes that wrap backend API calls
+├───├───    consts.js   #   - Static values reused through the app
 ├───├───    helpers.js  #   - Pure functions reused through the app
 └───    App.jsx         # App init + routes
 └───    index.jsx       # Main entry point / app mount

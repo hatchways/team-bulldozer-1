@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
+
+import { UserContext } from '../contexts/User';
 
 import AppLayout from '../layouts/AppLayout';
 import SignedOutLayout from '../layouts/SignedOutLayout';
@@ -11,17 +13,17 @@ const WrappedRoute = ({
   layoutProps,
   ...routeProps
 }) => {
-  const isSignedIn = false; // TODO - get from auth
+  const { user } = useContext(UserContext);
 
-  if (isPrivateRoute && !isSignedIn) {
+  if (isPrivateRoute && !user) {
     return <Route {...routeProps} render={() => <Redirect to="/" />} />;
   }
 
-  if (!isPrivateRoute && isSignedIn) {
+  if (!isPrivateRoute && user) {
     return <Route {...routeProps} render={() => <Redirect to="/dashboard" />} />;
   }
 
-  const Layout = isSignedIn ? AppLayout : SignedOutLayout;
+  const Layout = user ? AppLayout : SignedOutLayout;
 
   return (
     <Route
