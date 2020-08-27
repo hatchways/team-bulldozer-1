@@ -30,6 +30,15 @@ const User = new Schema({
 
 User.plugin(passportLocalMongoose);
 
+/**
+ * Find all distinct terms
+ * @param {string} term Search term
+ * @param {Array} types Crawlers to use
+ */
+User.statics.getAllTerms = async function getAllTerms() {
+  return this.distinct('terms');
+};
+
 const Model = mongoose.model('User', User);
 module.exports = {
   User: Model,

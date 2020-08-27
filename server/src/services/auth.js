@@ -1,6 +1,7 @@
 const passport = require('passport');
 
 const { User } = require('../models/user');
+const { addToSearchQueue } = require('./queue');
 
 // TODO: Put in settings somewhere
 const defaultCrawlers = ['reddit', 'twitter'];
@@ -33,6 +34,9 @@ exports.SignUp = async (req, res, next) => {
   }
 
   const { password, companyName } = req.body;
+
+  // Add company name to queue (ideally should have been done through emitter pattern)
+  addToSearchQueue(companyName, 1);
 
   // Create document
   const user = new User({
@@ -74,8 +78,16 @@ exports.UpdateProfile = async (req, res) => {
   Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
 
   if (Object.keys(obj).length > 0) {
+    // Quickly add terms to queue
+    if (obj.terms !== undefined && obj.terms.length > 0) {
+      // Add search terms to queue to refresh local data
+      obj.terms.map((term) => addToSearchQueue(term, 1));
+    }
+    // Update user profile
     await User.updateOne({ _id: req.user._id }, obj).exec();
+
     return res.status(202).send();
   }
+
   return res.status(200).send();
 };

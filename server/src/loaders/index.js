@@ -5,7 +5,7 @@
  * in the main app.js
  */
 module.exports = (app) => {
-  require('./cron')();
+  require('./cron');
 
   // Load express modules
   require('./express')(app);
