@@ -5,16 +5,19 @@ const searchProcessor = require('./processors/search');
 const config = require('../config').redis;
 const cronConfig = require('../config').cron;
 
-const searchQueue = new Queue('search', { redis: config });
-const fetchJobQueue = new Queue('fetcher', { redis: config });
-
 /**
  * Add search term to processing queue
  * @param {string} search Search term to add
  * @param {number} [priority=9] 1 is top priority
  */
 function addToSearchQueue(search, priority = 9) {
-  searchQueue.add({ search }, { priority });
+  try {
+    const searchQueue = new Queue('search', config.uri);
+    searchQueue.add({ search }, { priority });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }
 }
 
 /**
@@ -22,6 +25,7 @@ function addToSearchQueue(search, priority = 9) {
  */
 function startSearchQueueProcessing() {
   // Start queue processor
+  const searchQueue = new Queue('search', config.uri);
   searchQueue.process(searchProcessor.processSearchJob);
   // (could also have been done through another queue)
   searchQueue.on('completed', searchProcessor.saveSearchResult);
@@ -31,6 +35,8 @@ function startSearchQueueProcessing() {
  * Add all search terms to the search queue
  */
 function startDailyCron() {
+  const fetchJobQueue = new Queue('fetcher', config.uri);
+
   fetchJobQueue.process((job) => {
     // Add all terms to the search queue
     const terms = User.getAllTerms();
@@ -43,7 +49,6 @@ function startDailyCron() {
 }
 
 module.exports = {
-  queue: searchQueue,
   startProcessing: startSearchQueueProcessing,
   addToSearchQueue,
   startDailyCron,

@@ -46,14 +46,17 @@ jobs: # a collection of steps
           environment:
             DOCKERIZE_VERSION: v0.6.1
       - run:
-          name: Wait for db
+          name: Wait for redis
           command: dockerize -wait tcp://localhost:6379 -timeout 1m
+      - run:
+          name: Wait for mongodb
+          command: dockerize -wait tcp://localhost:27017 -timeout 1m
       - run:
           name: export-test-result
           command: |
             cd server
             mkdir -p ./reports
-            mocha ./build/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --exit --timeout 10000 --reporter-options mochaFile=./reports/mocha.xml
+            npm run build && npm run start:test
           when: always
       - store_test_results:
           path: ./server/src/coverage

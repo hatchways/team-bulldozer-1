@@ -5,8 +5,6 @@
  * in the main app.js
  */
 module.exports = (app) => {
-  require('./cron');
-
   // Load express modules
   require('./express')(app);
   // Init passport

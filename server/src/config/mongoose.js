@@ -8,6 +8,7 @@ const options = {
   useUnifiedTopology: true,
   useCreateIndex: true,
   useFindAndModify: false,
+  connectTimeoutMS: 1000,
 };
 
 let { uri } = config.uri;
@@ -18,10 +19,12 @@ if (process.env.NODE_ENV === 'test') {
   const mongoServer = new MongoMemoryServer();
   (async () => {
     uri = await mongoServer.getUri();
-    mongoose.connect(uri, options);
+    // eslint-disable-next-line no-console
+    mongoose.connect(uri, options, (error) => console.error);
   })();
 } else {
-  mongoose.connect(uri, options);
+  // eslint-disable-next-line no-console
+  mongoose.connect(uri, options, (error) => console.error);
 }
 
 module.exports = mongoose;

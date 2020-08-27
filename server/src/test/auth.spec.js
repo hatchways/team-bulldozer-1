@@ -43,14 +43,18 @@ describe('auth', () => {
 
   describe('/POST auth/register', () => {
     function expectStatus(done, expectedStatusCode, objectToSend) {
-      chai
-        .request(app)
-        .post('/auth/register/')
-        .send(objectToSend).then((result) => {
-          should.not.exist(result.err);
-          result.should.have.status(expectedStatusCode);
-          done();
-        });
+      try {
+        chai
+          .request(app)
+          .post('/auth/register/')
+          .send(objectToSend).then((result) => {
+            should.not.exist(result.err);
+            result.should.have.status(expectedStatusCode);
+            done();
+          });
+      } catch (error) {
+        done(error);
+      }
     }
 
     it('it should return 201 user has been registered',

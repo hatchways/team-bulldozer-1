@@ -24,6 +24,8 @@ app.set('port', config.web.port);
  */
 const server = http.createServer(app);
 
+require('../loaders/cron');
+
 /**
  * Listen on provided port, on all network interfaces.
  */
