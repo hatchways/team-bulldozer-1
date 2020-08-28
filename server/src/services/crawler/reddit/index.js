@@ -1,4 +1,4 @@
-import '../../typedef';
+require('../../typedef');
 
 const Reddit = require('reddit');
 const config = require('../../../config').reddit;

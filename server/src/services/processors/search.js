@@ -1,4 +1,4 @@
-import '../typedef';
+require('../typedef');
 
 const { analyze } = require('../emotion');
 const { Result } = require('../../models');

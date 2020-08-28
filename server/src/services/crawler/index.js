@@ -1,4 +1,4 @@
-import '../typedef';
+require('../typedef');
 
 /**
   * @type CrawlerEngine
