@@ -6,8 +6,9 @@
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/bin/www.js",
     "start:dev": "nodemon ./src/bin/www.js",
-    "start:test": "./node_modules/.bin/mocha ./src/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml",
-    "start:coverage": "node ./node_modules/nyc/bin/nyc.js ./node_modules/.bin/mocha ./src/**/*.spec.js ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml",
+    "start:dev:test": "cross-env MONGO_DB=mongodb://localhost/archibald-tests mocha ./src/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --timeout 30000",
+    "start:test": "cross-env MONGO_DB=mongodb://localhost/archibald-tests mocha ./src/**/*.spec.js --reporter ./node_modules/mocha-junit-reporter --exit --timeout 10000 --reporter-options mochaFile=./reports/mocha.xml",
+    "start:coverage": "node ./node_modules/nyc/bin/nyc.js ./node_modules/.bin/mocha ./build/**/*.spec.js ./node_modules/mocha-junit-reporter --exit --timeout 30000 --reporter-options mochaFile=./reports/mocha.xml",
     "start:lint": "eslint ./src/"
   },
   "config": {
@@ -17,6 +18,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "bull": "^3.18.0",
     "cookie-parser": "~1.4.5",
     "cookie-session": "^1.4.0",
     "debug": "~4.1.1",
@@ -25,27 +27,29 @@
     "express-session": "^1.17.1",
     "express-validator": "^6.6.1",
     "http-errors": "^1.8.0",
-    "mongoose": "^5.10.0",
+    "mongoose": "^5.10.1",
     "morgan": "~1.10.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^6.0.1"
+    "passport-local-mongoose": "^6.0.1",
+    "sentiment": "^5.0.2",
+    "twitter": "^1.7.1"
   },
   "devDependencies": {
-    "@types/node": "^14.0.27",
+    "@types/node": "^14.6.1",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "eslint": "^7.6.0",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.7.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",
-    "mocha": "^8.1.1",
+    "mocha": "^8.1.2",
     "mocha-junit-reporter": "^2.0.0",
-    "mongodb-memory-server": "^6.6.3",
     "nodemon": "^2.0.4",
     "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.7"
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.2"
   }
 }

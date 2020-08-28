@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+const passportLocalMongoose = require('passport-local-mongoose');
+const mongoose = require('../config/mongoose');
 
 const { Schema } = mongoose;
-const passportLocalMongoose = require('passport-local-mongoose');
 
 const User = new Schema({
   username: {
@@ -29,6 +29,15 @@ const User = new Schema({
 }, { timestamps: true });
 
 User.plugin(passportLocalMongoose);
+
+/**
+ * Find all distinct terms
+ * @param {string} term Search term
+ * @param {Array} types Crawlers to use
+ */
+User.statics.getAllTerms = async function getAllTerms() {
+  return this.distinct('terms');
+};
 
 const Model = mongoose.model('User', User);
 module.exports = {

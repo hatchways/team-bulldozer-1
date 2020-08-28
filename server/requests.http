@@ -24,6 +24,16 @@ Content-Type: application/x-www-form-urlencoded
 
 username=foo@example.com&password=password
 
+###
+POST {{host}}/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "foo2@example.com",
+  "password": "password"
+}
+
+
 ### Logout (update cookie)
 POST {{host}}/auth/logout HTTP/1.1
 
@@ -45,14 +55,22 @@ Content-Type: application/json
 PATCH {{host}}/auth/me HTTP/1.1
 Content-Type: application/json
 
-{
-  "terms": [ "Company ABC", "Company DEF" ]
-}
+{ "terms": [ "Company ABC", "Company DEF" ] }
 
 ### Update active crawlers
 PATCH {{host}}/auth/me HTTP/1.1
 Content-Type: application/json
 
-{
-  "crawlers": ["foo", "bar"]
-}
+{ "crawlers": ["twitter", "reddit"] }
+
+
+### Search
+GET {{host}}/search?term=ABC&type=recent HTTP/1.1
+Content-Type: application/json
+### 
+GET {{host}}/search?term=ABC&type=popular HTTP/1.1
+Content-Type: application/json
+### Popular by default
+GET {{host}}/search?term=ABC HTTP/1.1
+Content-Type: application/json
+

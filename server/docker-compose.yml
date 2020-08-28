@@ -1,0 +1,24 @@
+version: '3'
+services:
+  web:
+    container_name: hatchways-web
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - SESSION_SECRET=secure-string-with-full-random-zxsdsufywireuytwieur
+      - MONGO_DB=mongodb://mongo/archibald
+      - REDIS_URI=redis://127.0.0.1:6379
+    links:
+      - redis
+      - mongo
+  redis:
+    image: redis:6-alpine
+    container_name: hatchways-redis
+    ports:
+    - "6379:6379"
+  mongo:
+    image: mongo:4.4-bionic
+    container_name: hatchways-mongo
+    ports:
+    - "27017:27017"
