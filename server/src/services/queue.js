@@ -25,9 +25,9 @@ function addToSearchQueue(search, priority = 9) {
 function startSearchQueueProcessing() {
   // Start queue processor
   const searchQueue = new Queue('search', config.redis.uri);
-  searchQueue.process(searchProcessor.processSearchJob);
   // (could also have been done through another queue)
   searchQueue.on('completed', searchProcessor.saveSearchResult);
+  searchQueue.process(searchProcessor.processSearchJob);
 }
 
 /**

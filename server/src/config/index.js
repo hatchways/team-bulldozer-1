@@ -16,6 +16,13 @@ const config = {
     token: process.env.TWITTER_TOKEN || 'TWITTER_TOKEN',
     token_secret: process.env.TWITTER_TOKEN_SECRET || 'TWITTER_TOKEN_SECRET',
   },
+  reddit: {
+    appId: process.env.REDDIT_APP_ID || 'REDDIT_APP_ID',
+    appSecret: process.env.REDDIT_APP_SECRET || 'REDDIT_APP_SECRET',
+    username: process.env.REDDIT_USERNAME || 'REDDIT_USERNAME',
+    password: process.env.REDDIT_PASSWORD || 'REDDIT_PASSWORD',
+    userAgent: 'Mentions/1.0.0',
+  },
   redis: {
     uri: process.env.REDIS_URI || 'redis://127.0.0.1:6379',
   },

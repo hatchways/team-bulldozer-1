@@ -1,78 +1,53 @@
-/* eslint-disable import/no-dynamic-require */
-/* eslint-disable global-require */
-/* eslint-disable class-methods-use-this */
-const { readdirSync } = require('fs');
+require('../typedef');
 
 /**
- * Provide abstraction to implemented crawlers
- */
-class CrawlerLoaderService {
-  constructor(name) {
-    this.name = name;
-    this.crawlerList = undefined;
-    this.crawlerInstanceList = {};
-  }
+  * @type CrawlerEngine
+  */
+const CrawlerEngine = {
+  plugins: [],
 
   /**
-   * List crawler types
+   * Register a plugin
+   * @param {Plugin} plugin Plugin to register
    */
-  getCrawlers() {
-    if (this.crawlerList === undefined) {
-      const getDirectories = (source) => readdirSync(source, { withFileTypes: true })
-        .filter((dirent) => dirent.isDirectory())
-        .map((dirent) => dirent.name);
+  register(plugin) {
+    const {
+      name, findPopular, findRecent,
+    } = plugin;
 
-      const crawlers = getDirectories(__dirname);
-      this.crawlerList = crawlers;
+    if (findPopular === undefined || findRecent === undefined) {
+      throw Error('Invalid plugin');
     }
-    return this.crawlerList;
-  }
+    this.plugins[name] = {
+      findPopular, findRecent,
+    };
+  },
 
-  getActiveCrawlers(user) {
-    let crawlers = this.getCrawlers();
-    // Filter on actual user active crawlers
-    if (user && user.crawlers) {
-      const userCrawlers = user.crawlers;
-      crawlers = crawlers.filter((name) => user.crawlers.indexOf(name) > -1);
-    }
-    return crawlers;
-  }
+  /**
+   * Search through all plugins and then return result
+   * @param {string} search Search terms
+   */
+  async search(search) {
+    const searches = Object
+      .keys(this.plugins)
+      .map(async (pluginName) => {
+        /**
+         * @type Plugin
+         */
+        const plugin = this.plugins[pluginName];
+        const popular = await plugin.findPopular(search);
+        const recent = await plugin.findRecent(search);
+        return { search, popular, recent };
+      });
+    return Promise.all(searches);
+  },
+};
 
-  getCrawler(name) {
-    const crawlers = this.getCrawlers();
-    if (crawlers.indexOf(name) < 0) {
-      return undefined;
-    }
+// Register crawlers here
+CrawlerEngine.register(require('./reddit'));
+CrawlerEngine.register(require('./twitter'));
 
-    if (this.crawlerInstanceList[name] !== undefined) {
-      return this.crawlerInstanceList[name];
-    }
+// To perform a search on all plugins:
+// CrawlerEngine.search('test');
 
-    // name validated to avoid path traversal
-    const path = `./${name}`;
-    const { crawler } = require(path);
-
-    // pseudo expected interface/attributes
-    const methodNames = ['name', 'findPopular', 'findRecent', 'convert'];
-
-    const keys = Object.keys(crawler)
-      .filter((key) => methodNames.indexOf([key]));
-
-    if (keys.length < methodNames.length) {
-      throw Error('Missing methods from interface CrawlerBase');
-    }
-
-    const methods = keys.filter((key) => typeof (crawler[key]) === 'function');
-    const attributes = keys.filter((key) => typeof (crawler[key]) === 'string');
-
-    if (methods.concat(attributes).length !== methodNames.length) {
-      throw Error('Missing methods from interface CrawlerBase');
-    }
-
-    this.crawlerInstanceList[name] = crawler;
-
-    return crawler;
-  }
-}
-
-module.exports = { CrawlerLoaderService };
+module.exports = { CrawlerEngine };
