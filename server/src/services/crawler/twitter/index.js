@@ -25,7 +25,7 @@ crawler.convert = (type, obj) => ({
   // TODO: Fetch full length body if (obj.truncated === true)
   source: crawler.name,
   type,
-  title: obj.text,
+  title: obj.user.name,
   body: obj.text,
   url: `https://twitter.com/i/web/status/${obj.id_str}`,
   thumbnail: obj.user.profile_image_url_https,
