@@ -17,7 +17,7 @@ const config = require('../config');
  * Get port from environment and store in Express.
  */
 const { port } = config.web;
-app.set('port', config.web.port);
+app.set('port', port);
 
 /**
  * Create HTTP server.

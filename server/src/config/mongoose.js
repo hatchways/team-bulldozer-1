@@ -1,7 +1,7 @@
 /* eslint-disable global-require */
 const mongoose = require('mongoose');
 
-const config = require('./index').mongo;
+const config = require('./index');
 
 const options = {
   useNewUrlParser: true,
@@ -11,6 +11,6 @@ const options = {
   connectTimeoutMS: 1000,
 };
 
-mongoose.connect(config.uri, options);
+mongoose.connect(config.mongo.uri, options);
 
 module.exports = mongoose;
