@@ -1,24 +1,9 @@
+import '../typedef';
+
 const { analyze } = require('../emotion');
 const { Result } = require('../../models');
 
-const { CrawlerLoaderService } = require('../crawler');
-
-/**
- * @typedef {Object} CrawlerResult
- * @property {string} source
- * @property {string} type
- * @property {string} title
- * @property {string} body
- * @property {string} url
- * @property {string} thumbnail
- */
-
-/**
- * @typedef {Object} CrawlerResults
- * @property {string} search
- * @property {CrawlerResult[]} popular
- * @property {CrawlerResult[]} recent
- */
+const { CrawlerEngine } = require('../crawler');
 
 /**
  * Fetch sentiment for records. Update them and then return updated array
@@ -33,30 +18,6 @@ async function fetchSentiment(records) {
 }
 
 /**
- * Return {@link CrawlerResults} objects
- * @param {string} search Search term
- */
-async function getCrawlerResults(search) {
-  const crawlerService = new CrawlerLoaderService();
-  const activeCrawlers = crawlerService.getCrawlers();
-
-  const jobs = activeCrawlers.map(async (crawlerName) => {
-    // Retrieve crawler instance
-    const crawler = crawlerService.getCrawler(crawlerName);
-    // Call both search types
-    const popular = await crawler.findPopular(search);
-    const recent = await crawler.findRecent(search);
-    // Push to result array
-    return {
-      search,
-      popular,
-      recent,
-    };
-  });
-  return Promise.all(jobs);
-}
-
-/**
  * Search queue processor
  * @param {*} job Bull JS job
  * @param {*} done Done callback
@@ -64,7 +25,7 @@ async function getCrawlerResults(search) {
 async function processSearchJob(job, done) {
   const results = [];
   try {
-    const crawlerResults = await getCrawlerResults(job.data.search);
+    const crawlerResults = await CrawlerEngine.search(job.data.search);
 
     let records = crawlerResults
       // Get recent

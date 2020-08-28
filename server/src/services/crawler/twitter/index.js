@@ -1,3 +1,5 @@
+import '../../typedef';
+
 const Twitter = require('twitter');
 const config = require('../../../config');
 
@@ -8,8 +10,19 @@ const client = new Twitter({
   access_token_secret: config.twitter.token_secret,
 });
 
-const crawler = {};
-crawler.name = 'twitter';
+function convert(type, obj) {
+  return {
+    // TODO: Fetch full length body if (obj.truncated === true)
+    source: 'twitter',
+    type,
+    author: obj.user.name,
+    title: obj.user.name,
+    body: obj.text,
+    url: `https://twitter.com/i/web/status/${obj.id_str}`,
+    thumbnail: obj.user.profile_image_url_https,
+    date: new Date(obj.created_at),
+  };
+}
 
 async function searchTweets(term, type) {
   const query = {
@@ -18,23 +31,17 @@ async function searchTweets(term, type) {
     result_type: escape(type),
   };
   const tweets = await client.get('search/tweets', query);
-  return tweets.statuses.map((result) => crawler.convert(query.result_type, result));
+  return tweets.statuses.map((result) => convert(query.result_type, result));
 }
 
-crawler.convert = (type, obj) => ({
-  // TODO: Fetch full length body if (obj.truncated === true)
-  source: crawler.name,
-  type,
-  title: obj.user.name,
-  body: obj.text,
-  url: `https://twitter.com/i/web/status/${obj.id_str}`,
-  thumbnail: obj.user.profile_image_url_https,
-});
-
-crawler.findPopular = async (term) => searchTweets(term, 'popular');
-crawler.findRecent = async (term) => searchTweets(term, 'recent');
-
-module.exports = { crawler };
+/**
+ * @type Plugin
+ */
+module.exports = {
+  name: 'twitter',
+  findPopular: (term) => searchTweets(term, 'popular'),
+  findRecent: (term) => searchTweets(term, 'recent'),
+};
 
 /**
  * Ensure all parameters are properly URL encoded.

@@ -14,6 +14,14 @@ const Result = new Schema({
     required: true,
     index: { unique: false },
   },
+  author: {
+    type: String,
+    required: false,
+  },
+  date: {
+    type: Date,
+    required: false,
+  },
   title: {
     type: String,
     required: true,
