@@ -1,9 +1,9 @@
 require('../../typedef');
 
 const Reddit = require('reddit');
-const config = require('../../../config').reddit;
+const config = require('../../../config');
 
-const reddit = new Reddit(config);
+const reddit = new Reddit(config.reddit);
 
 const redditThumbnailStates = {
   self: 'https://www.reddit.com/static/self_default2.png',
