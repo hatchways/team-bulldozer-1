@@ -16,11 +16,16 @@ module.exports = (app) => {
   app.use(express.static(join(__dirname, '..', 'public')));
 
   // Route all unhandled requests to index page (routing managed front)
-  app.get('/*', (req, res) => {
+  const index = (req, res) => {
     res.sendFile(join(__dirname, '../public/index.html'), (err) => {
       if (err) {
         res.status(500).send(err);
       }
     });
-  });
+  };
+  // TODO: Find a better and DRY alternative
+  app.get('/', index);
+  app.get('/sign-in', index);
+  app.get('/dashboard', index);
+  app.get('/settings', index);
 };
