@@ -19,7 +19,7 @@ chai.use(chaiHttp);
 
 describe('auth', () => {
   before(async () => {
-    const count = await User.count({});
+    const count = await User.countDocuments({});
     if (count > 0) {
       await User.deleteMany({});
     }
