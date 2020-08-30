@@ -1,11 +1,8 @@
 const express = require('express');
 const logger = require('morgan');
 
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const { join } = require('path');
-
-const config = require('../config');
 
 const { json, urlencoded } = express;
 
