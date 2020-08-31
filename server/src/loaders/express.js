@@ -1,26 +1,18 @@
 const express = require('express');
 const logger = require('morgan');
+const cors = require('cors');
 
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const { join } = require('path');
-
-const config = require('../config');
 
 const { json, urlencoded } = express;
 
 module.exports = async (app) => {
   app.use(logger('dev'));
   app.use(json());
+  app.use(cors());
   app.use(urlencoded({ extended: false }));
   app.use(cookieParser());
-  app.use(express.static(join(__dirname, 'public')));
-
-  app.use(session({
-    secret: config.web.session_secret,
-    resave: true,
-    saveUninitialized: false,
-  }));
 
   // Return the express app
   return app;

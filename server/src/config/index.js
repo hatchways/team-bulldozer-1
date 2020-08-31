@@ -2,6 +2,7 @@ const config = {
   web: {
     port: process.env.PORT || 3001,
     session_secret: process.env.SESSION_SECRET || 'CHANGE ME',
+    session_key: 'crawler.sid',
   },
   cron: {
     // Repeat job once every day at 3:00 (am)
