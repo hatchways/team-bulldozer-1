@@ -61,7 +61,7 @@ Result.index({ source: 1, type: 1, url: 1 }, { unique: true });
  * @param {string} term Search term
  * @param {Array} types Crawlers to use
  */
-Result.statics.search = async function search(term, crawlers, type) {
+Result.statics.search = async function search(term = '', crawlers, type) {
   return this.find({
     $or: [
       { title: { $regex: term, $options: 'i' } },

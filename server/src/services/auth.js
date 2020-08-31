@@ -74,6 +74,8 @@ exports.UpdateProfile = async (req, res) => {
     crawlers: crawlers && [...new Set(crawlers)],
   };
 
+  let status = 200;
+
   // TODO: add to utility class (remove undefined keys)
   Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
 
@@ -85,9 +87,9 @@ exports.UpdateProfile = async (req, res) => {
     }
     // Update user profile
     await User.updateOne({ _id: req.user._id }, obj).exec();
-
-    return res.status(202).send();
+    status = 202;
   }
 
-  return res.status(200).send();
+  const updatedUser = await User.findOne({ _id: req.user._id }).lean();
+  return res.status(status).send(updatedUser);
 };
