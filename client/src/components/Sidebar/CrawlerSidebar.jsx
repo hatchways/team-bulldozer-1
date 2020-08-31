@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 const CrawlerSidebar = () => {
   const classes = useStyles();
 
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const { CRAWLERS } = consts;
 
   const initialCrawlers = {};
@@ -36,6 +36,8 @@ const CrawlerSidebar = () => {
     setProviders(newCrawlers);
     AuthApi.setProfileInfo({
       crawlers: Object.keys(newCrawlers).filter((crawlerName) => newCrawlers[crawlerName]),
+    }).then((response) => {
+      setUser(response.data);
     });
   };
 

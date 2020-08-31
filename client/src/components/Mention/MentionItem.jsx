@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     objectFit: 'cover',
     [theme.breakpoints.up('md')]: {
-      width: 150,
       height: 150,
+      flex: '0 0 150px',
     },
   },
   content: {

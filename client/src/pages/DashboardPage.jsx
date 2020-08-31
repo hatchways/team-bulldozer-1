@@ -1,32 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 
-import MentionList from '../components/Mention/MentionList';
+import { SearchContext } from '../contexts/Search';
+import SearchApi from '../utils/api/SearchApi';
 
-const testMentions = [
-  {
-    source: 'twitter',
-    title: 'Some stuff at Apple',
-    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris',
-    thumbnail: 'http://placehold.it/800x600',
-    url: 'http://bulldozerinc.com',
-  },
-  {
-    source: 'reddit',
-    title: 'Some other stuff at Apple',
-    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris',
-    thumbnail: 'http://placehold.it/800x600',
-    url: 'http://bulldozerinc.com',
-  },
-  {
-    source: 'twitter',
-    title: 'Some more stuff at Apple',
-    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris',
-    thumbnail: 'http://placehold.it/800x600',
-    url: 'http://bulldozerinc.com',
-  },
-];
+import MentionList from '../components/Mention/MentionList';
+import { UserContext } from '../contexts/User';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,8 +22,29 @@ const useStyles = makeStyles((theme) => ({
 const DashboardPage = () => {
   const classes = useStyles();
 
-  const [mentions] = useState(testMentions);
+  const { user } = useContext(UserContext);
+  const { search } = useContext(SearchContext);
+  const [debouncedSearch] = useDebounce(search, 300);
+
+  const [isLoading, setisLoading] = useState(true);
+  const [mentions, setMentions] = useState([]);
   const [sort, setSort] = useState('recent');
+
+  useEffect(() => {
+    if (!debouncedSearch.length || debouncedSearch.length >= 3) {
+      setisLoading(true);
+      SearchApi.search(sort, debouncedSearch)
+        .then((response) => {
+          setMentions(response.data);
+        })
+        .catch(() => {
+          setMentions([]);
+        })
+        .finally(() => {
+          setisLoading(false);
+        });
+    }
+  }, [debouncedSearch, sort, user]);
 
   const handleSortChange = (event, newSort) => {
     if (newSort) {
@@ -51,20 +53,21 @@ const DashboardPage = () => {
   };
 
   return (
-  <main>
-    <header className={classes.header}>
-      <h1>My Mentions</h1>
-      <ToggleButtonGroup color="primary" value={sort} orientation="horizontal" exclusive onChange={handleSortChange}>
-        <ToggleButton value="recent" aria-label="recent">
-          Most recent
-        </ToggleButton>
-        <ToggleButton value="popular" aria-label="popular">
-          Most popular
-        </ToggleButton>
-      </ToggleButtonGroup>
-    </header>
-    <MentionList mentions={mentions} sort={sort} />
-  </main>
-)};
+    <main>
+      <header className={classes.header}>
+        <h1>My Mentions</h1>
+        <ToggleButtonGroup color="primary" value={sort} orientation="horizontal" exclusive onChange={handleSortChange}>
+          <ToggleButton value="recent" aria-label="recent">
+            Most recent
+          </ToggleButton>
+          <ToggleButton value="popular" aria-label="popular">
+            Most popular
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </header>
+      <MentionList isLoading={isLoading} mentions={mentions} />
+    </main>
+  );
+};
 
 export default DashboardPage;

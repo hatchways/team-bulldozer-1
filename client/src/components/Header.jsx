@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import {
@@ -14,6 +14,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import { makeStyles } from '@material-ui/core/styles';
 
 import logo from '../assets/img/logo.svg';
+
+import { SearchContext } from '../contexts/Search';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,6 +94,12 @@ const useStyles = makeStyles((theme) => ({
 const Header = ({ isLandingPage, isSignedIn }) => {
   const classes = useStyles();
 
+  const { search, setSearch } = useContext(SearchContext);
+
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+  };
+
   return (
     <header>
       <AppBar elevation={0}>
@@ -107,6 +115,8 @@ const Header = ({ isLandingPage, isSignedIn }) => {
                       root: classes.searchInputRoot,
                       input: classes.searchInputInput,
                     }}
+                    value={search}
+                    onChange={handleSearchChange}
                   />
                   <div className={classes.searchIcon}>
                     <SearchIcon color="primary" />
