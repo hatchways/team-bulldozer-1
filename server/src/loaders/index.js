@@ -7,6 +7,8 @@
 module.exports = (app) => {
   // Load express modules
   require('./express')(app);
+  // Load express session module
+  require('./session').init(app);
   // Init passport
   require('./passport')(app);
 };

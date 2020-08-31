@@ -36,6 +36,9 @@
             "request": "launch",
             "name": "Mocha All",
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "env": {
+                "MONGO_DB": "mongodb://localhost/archibald-tests"
+            },
             "args": [
                 "--timeout",
                 "999999",
@@ -53,6 +56,9 @@
             "request": "launch",
             "name": "Mocha Current File",
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "env": {
+                "MONGO_DB": "mongodb://localhost/archibald-tests"
+            },
             "args": [
                 "--timeout",
                 "999999",

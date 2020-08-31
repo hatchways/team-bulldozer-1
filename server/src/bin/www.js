@@ -24,6 +24,9 @@ app.set('port', port);
  */
 const server = http.createServer(app);
 
+// Init socket.io
+require('../loaders/socket')(server);
+
 require('../loaders/cron');
 
 /**

@@ -1,10 +1,12 @@
+const router = require('express').Router();
+
 const Validators = require('../validators');
 const AuthService = require('../services/auth');
 
-module.exports = (app) => {
-  app.post('/auth/register', Validators.auth.userSignup, AuthService.SignUp);
-  app.post('/auth/login', Validators.auth.userSignin, AuthService.Login);
-  app.post('/auth/logout', AuthService.Logout);
-  app.get('/auth/me', Validators.auth.isAuthenticated, AuthService.Self);
-  app.patch('/auth/me', Validators.auth.updateUserProfile, AuthService.UpdateProfile);
-};
+router.post('/register', Validators.auth.userSignup, AuthService.SignUp);
+router.post('/login', Validators.auth.userSignin, AuthService.Login);
+router.post('/logout', AuthService.Logout);
+router.get('/me', Validators.auth.isAuthenticated, AuthService.Self);
+router.patch('/me', Validators.auth.updateUserProfile, AuthService.UpdateProfile);
+
+module.exports = router;
