@@ -1,5 +1,7 @@
 # Mentions Crawler
 
+[![hatchways](https://circleci.com/gh/hatchways/team-bulldozer-1.svg?style=shield)](https://app.circleci.com/pipelines/github/hatchways/team-bulldozer-1)
+
 ## Links/Resources
 
 - [Github Repo](https://github.com/hatchways/team-bulldozer-1/invitations)
