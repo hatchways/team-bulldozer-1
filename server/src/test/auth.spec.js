@@ -1,3 +1,4 @@
+/* eslint-disable prefer-template */
 process.env.NODE_ENV = 'test';
 
 const chai = require('chai');
@@ -17,6 +18,11 @@ const validAccount = { username: 'foo@example.com', password: 'password', compan
 chai.should();
 chai.use(chaiHttp);
 
+const HOST_BASE = '/api';
+const ROUTE_REGISTER = HOST_BASE + '/auth/register';
+const ROUTE_LOGIN = HOST_BASE + '/auth/login';
+const ROUTE_ME = HOST_BASE + '/auth/me';
+
 describe('auth', () => {
   before(async () => {
     const count = await User.countDocuments({});
@@ -31,14 +37,14 @@ describe('auth', () => {
   function createAccount() {
     return chai
       .request(app)
-      .post('/auth/register/')
+      .post(ROUTE_REGISTER)
       .send(validAccount);
   }
 
   async function getLoggedInAgent() {
     await createAccount();
     const agent = chai.request.agent(app);
-    await agent.post('/auth/login/').send(validAccount);
+    await agent.post(ROUTE_LOGIN).send(validAccount);
     return agent;
   }
 
@@ -46,7 +52,7 @@ describe('auth', () => {
     function expectStatus(done, expectedStatusCode, objectToSend) {
       chai
         .request(app)
-        .post('/auth/register/')
+        .post(ROUTE_REGISTER)
         .send(objectToSend).then((result) => {
           should.not.exist(result.err);
           // should.not.exist(result.error);
@@ -79,7 +85,7 @@ describe('auth', () => {
       await createAccount();
       const result = await chai
         .request(app)
-        .post('/auth/login/')
+        .post(ROUTE_LOGIN)
         .send(validAccount);
       should.not.exist(result.err);
       result.should.have.status(200);
@@ -88,7 +94,7 @@ describe('auth', () => {
     it('it should return 400 with invalid credentials', async () => {
       const result = await chai
         .request(app)
-        .post('/auth/login/')
+        .post(ROUTE_LOGIN)
         .send({ username: 'foo@example.com', password: 'foo' });
       should.not.exist(result.err);
       result.should.have.status(400);
@@ -100,7 +106,7 @@ describe('auth', () => {
       // Prepare
       const agent = await getLoggedInAgent();
       // Act
-      const result = await agent.get('/auth/me');
+      const result = await agent.get(ROUTE_ME);
       // Assert
       should.not.exist(result.err);
       result.should.have.status(200);
@@ -110,7 +116,7 @@ describe('auth', () => {
       // Prepare
       const agent = chai.request.agent(app);
       // Act
-      const result = await agent.get('/auth/me');
+      const result = await agent.get(ROUTE_ME);
       // Assert
       should.not.exist(result.err);
       result.should.have.status(401);
@@ -122,14 +128,14 @@ describe('auth', () => {
       // Prepare
       const agent = await getLoggedInAgent();
 
-      (await agent.patch('/auth/me')
+      (await agent.patch(ROUTE_ME)
         .send({ terms: ['foo'] })).should.have.status(202);
 
-      (await agent.patch('/auth/me')
+      (await agent.patch(ROUTE_ME)
         .send({ terms: ['foo'], email: 'foo@example.com' }))
         .should.have.status(202);
 
-      (await agent.patch('/auth/me')
+      (await agent.patch(ROUTE_ME)
         .send({ crawlers: ['twitter'] }))
         .should.have.status(202);
     });
@@ -138,23 +144,23 @@ describe('auth', () => {
       // Prepare
       const agent = await getLoggedInAgent();
 
-      (await agent.patch('/auth/me')
+      (await agent.patch(ROUTE_ME)
         .send({ email: ['foo'] }))
         .should.have.status(400);
 
-      (await agent.patch('/auth/me')
+      (await agent.patch(ROUTE_ME)
         .send({ terms: 3, email: 'foo@example.com' }))
         .should.have.status(400);
 
-      (await agent.patch('/auth/me')
+      (await agent.patch(ROUTE_ME)
         .send({ companyName: ' ' }))
         .should.have.status(400);
 
-      (await agent.patch('/auth/me')
+      (await agent.patch(ROUTE_ME)
         .send({ companyName: '' }))
         .should.have.status(400);
 
-      (await agent.patch('/auth/me')
+      (await agent.patch(ROUTE_ME)
         .send({ email: 'foo' }))
         .should.have.status(400);
     });
@@ -163,7 +169,7 @@ describe('auth', () => {
       // Prepare
       const agent = chai.request.agent(app);
 
-      const result = await agent.get('/auth/me');
+      const result = await agent.get(ROUTE_ME);
       should.not.exist(result.err);
       result.should.have.status(401);
     });

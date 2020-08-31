@@ -29,3 +29,5 @@ server/.nyc_output/
 server/reports/
 
 server/src/public/
+
+client/build/
