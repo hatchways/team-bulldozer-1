@@ -8,7 +8,7 @@ services:
     environment:
       - SESSION_SECRET=secure-string-with-full-random-zxsdsufywireuytwieur
       - MONGO_DB=mongodb://mongo/archibald
-      - REDIS_URI=redis://127.0.0.1:6379
+      - REDIS_URI=redis://redis:6379
     links:
       - redis
       - mongo
