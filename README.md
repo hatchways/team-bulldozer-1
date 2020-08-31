@@ -11,16 +11,23 @@
 - MongoDB + [Mongoose](https://mongoosejs.com/docs/) + [Passport-JS](http://www.passportjs.org/)
 - Express.js
 - Node.js
-    - [Search tweets](https://developer.twitter.com/en/docs/tweets/search/overview) : free is limited in time range but faster to implement
-    - [Twitter feed source api](https://developer.twitter.com/en/docs/tweets/filter-realtime/overview) : Best of all, allow real-time capture of tweets. Needs a running worker, can't be deployed to serverless
+    - [Search tweets](https://developer.twitter.com/en/docs/tweets/search/overview): free is limited in time range but faster to implement
+    - [Twitter feed source api](https://developer.twitter.com/en/docs/tweets/filter-realtime/overview): Best of all, allow real-time capture of tweets. Needs a running worker, can't be deployed to serverless
     - [Reddit Search API](https://www.reddit.com/dev/api/#GET_search)
       - [reddit npm](https://www.npmjs.com/package/reddit)
+    - [Bull](https://github.com/OptimalBits/bull): redis based queue
+    
 - React (bootstraped with [create-react-app](https://create-react-app.dev/)) 
     - [Material-UI](https://material-ui.com/) is used for UI components
     - All styles are authored using [JSS](https://cssinjs.org/) using Material UI's wrappers
 - Code linting using ESlint acording to [Airbnb's JS code style guide](https://github.com/airbnb/javascript/tree/master/react)
 
 ## Back-end
+
+### Required API keys
+
+- [Twitter](https://developer.twitter.com/en/apps)
+- [Reddit](https://www.reddit.com/prefs/apps)
 
 ### Folder structure
 
@@ -40,18 +47,51 @@ server
 └─── test                 # Unit Test specs
 ```
 
-### Starting MongoDB server locally (Docker)
+### Starting Backend server containers locally (Docker)
 
-  - [Reference](https://hub.docker.com/_/mongo)
+  - [Mongo](https://hub.docker.com/_/mongo)
+  - [Redis](https://hub.docker.com/_/redis)
+  - [Docker-compose](https://docs.docker.com/compose/gettingstarted/)
+
+First, in the `/server` folder :
+
+1. Copy `.env.example` to `.env`
+2. Change api keys in `.env` file
+
+To start all backend services at once. Service will be available at http://localhost:3001
 
 ```
-docker run --name hatchways-mongo -p 27017:27017 -d mongo:4.4-bionic
+docker-compose up -d
 ```
+
+To start redis and mongo only (for backend dev)
+
+```
+docker-compose up -d redis mongo
+```
+
+To update backend container
+
+```
+docker-compose build
+```
+
+Clean up resources
+
+```
+docker-compose down
+```
+
 
 ### Starting the backend
 
-1. In the `/server` folder, install dependencies with `npm install`
-2. To run:
+In the `/server` folder
+
+1. Copy `.env.example` to `.env`
+2. Change api keys in `.env` file
+3. Start mandatory services: `docker-compose up -d redis mongo`
+4. Install dependencies with `npm install`
+5. To run:
     * Run `npm run debug` to start the backend locally with hot reload on `http://localhost:3001`
     * Run `npm test` to run unit tests
 

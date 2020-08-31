@@ -18,8 +18,11 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('auth', () => {
-  before(() => {
-    User.collection.drop();
+  before(async () => {
+    const count = await User.count({});
+    if (count > 0) {
+      await User.deleteMany({});
+    }
   });
 
   after(() => {
@@ -40,32 +43,35 @@ describe('auth', () => {
   }
 
   describe('/POST auth/register', () => {
-    async function expectStatus(done, expectedStatusCode, objectToSend) {
-      const result = await chai
+    function expectStatus(done, expectedStatusCode, objectToSend) {
+      chai
         .request(app)
         .post('/auth/register/')
-        .send(objectToSend);
-      should.not.exist(result.err);
-      result.should.have.status(expectedStatusCode);
+        .send(objectToSend).then((result) => {
+          should.not.exist(result.err);
+          // should.not.exist(result.error);
+          result.should.have.status(expectedStatusCode);
+          done();
+        });
     }
 
     it('it should return 201 user has been registered',
-      async () => expectStatus(undefined, 201, validAccount));
+      (done) => expectStatus(done, 201, validAccount));
 
     it('it should return 400 when password is not provided',
-      async () => expectStatus(undefined, 400, { username: 'foo@example.com', companyName: 'foo' }));
+      (done) => expectStatus(done, 400, { username: 'foo@example.com', companyName: 'foo' }));
 
     it('it should return 400 when wrong email is provided',
-      async () => expectStatus(undefined, 400, { username: 'foo@com', password: 'wrong', companyName: 'foo' }));
+      (done) => expectStatus(done, 400, { username: 'foo@com', password: 'wrong', companyName: 'foo' }));
 
     it('it should return 400 when wrong email format is provided',
-      async () => expectStatus(undefined, 400, { username: 'foo', password: 'wrong', companyName: 'foo' }));
+      (done) => expectStatus(done, 400, { username: 'foo', password: 'wrong', companyName: 'foo' }));
 
     it('it should return 400 when username is not provided',
-      async () => expectStatus(undefined, 400, { password: 'password', companyName: 'foo' }));
+      (done) => expectStatus(done, 400, { password: 'password', companyName: 'foo' }));
 
     it('it should return 400 when account is already registered',
-      async () => expectStatus(undefined, 400, validAccount));
+      (done) => expectStatus(done, 400, validAccount));
   });
 
   describe('/POST auth/login', () => {
