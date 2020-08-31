@@ -2,7 +2,7 @@ const { query, validationResult } = require('express-validator');
 
 const SearchSchema = {
   term: query('term')
-    .isLength({ min: 3 }),
+    .isLength({ min: 3 }).optional({ nullable: true, checkFalsy: true }),
 
   type: query('type')
     .isIn(['popular', 'recent']).optional(),

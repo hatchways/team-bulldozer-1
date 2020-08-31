@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import {
@@ -14,6 +14,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import { makeStyles } from '@material-ui/core/styles';
 
 import logo from '../assets/img/logo.svg';
+
+import { SearchContext } from '../contexts/Search';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(3),
       width: 'auto',
     },
+    [theme.breakpoints.up('lg')]: {
+      marginLeft: 210,
+    },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
@@ -70,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     color: theme.palette.common.black,
     [theme.breakpoints.up('md')]: {
-      width: '40ch',
+      width: '63ch',
     },
   },
   settings: {
@@ -86,8 +91,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = ({ isLandingPage, isSignedIn }) => {
+const Header = ({ isLandingPage, isSignedIn, onSearchSubmit }) => {
   const classes = useStyles();
+
+  const { search, setSearch } = useContext(SearchContext);
+
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    onSearchSubmit();
+  };
 
   return (
     <header>
@@ -97,18 +113,20 @@ const Header = ({ isLandingPage, isSignedIn }) => {
           {isSignedIn
             ? (
               <>
-                <div className={classes.search}>
+                <form onSubmit={handleSearchSubmit} className={classes.search}>
                   <InputBase
                     placeholder="Search in your mentions"
                     classes={{
                       root: classes.searchInputRoot,
                       input: classes.searchInputInput,
                     }}
+                    value={search}
+                    onChange={handleSearchChange}
                   />
                   <div className={classes.searchIcon}>
                     <SearchIcon color="primary" />
                   </div>
-                </div>
+                </form>
                 <IconButton
                   component={Link}
                   to="/settings"
@@ -142,11 +160,13 @@ const Header = ({ isLandingPage, isSignedIn }) => {
 Header.propTypes = {
   isLandingPage: PropTypes.bool,
   isSignedIn: PropTypes.bool,
+  onSearchSubmit: PropTypes.func,
 };
 
 Header.defaultProps = {
   isLandingPage: false,
   isSignedIn: false,
+  onSearchSubmit: () => {},
 };
 
 export default Header;

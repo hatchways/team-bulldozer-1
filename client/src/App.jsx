@@ -15,11 +15,13 @@ import SettingsPage from './pages/SettingsPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import WrappedRoute from './components/WrappedRoute';
-import CrawlerSidebar from './components/sidebars/CrawlerSidebar';
-import SettingsSidebar from './components/sidebars/SettingsSidebar';
+import CrawlerSidebar from './components/Sidebar/CrawlerSidebar';
+import SettingsSidebar from './components/Sidebar/SettingsSidebar';
+import { SearchProvider } from './contexts/Search'
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
   const [user, setUser] = useState();
   const [error, setError] = useState();
 
@@ -41,6 +43,7 @@ const App = () => {
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <UserProvider value={{ user, setUser }}>
+        <SearchProvider value={{ search, setSearch }}>
         {isLoading
           ? <LinearProgress />
           : (
@@ -60,9 +63,9 @@ const App = () => {
               ) : null }
             </>
           )}
+        </SearchProvider>
       </UserProvider>
     </MuiThemeProvider>
-
   );
 };
 

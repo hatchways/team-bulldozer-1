@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
 
 import Header from '../components/Header';
 
 const useStyles = makeStyles((theme) => {
-  const sidebarBorder = `2px solid ${theme.palette.gray.main}`;
+  const sidebarBorder = `2px solid ${theme.palette.gray.light}`;
   return {
     root: {
       paddingTop: 100,
@@ -26,6 +28,7 @@ const useStyles = makeStyles((theme) => {
       },
     },
     content: {
+      maxWidth: 1100,
       padding: theme.spacing(3),
       [theme.breakpoints.up('md')]: {
         padding: theme.spacing(4),
@@ -37,10 +40,15 @@ const useStyles = makeStyles((theme) => {
 
 const AppLayout = ({ children, sidebar }) => {
   const classes = useStyles();
+  const [redirectTo, setRedirectTo] = useState();
+
+  const handleSearchSubmit = () =>{
+    setRedirectTo('/dashboard');
+  };
 
   return (
     <div className={classes.root}>
-      <Header isSignedIn />
+      <Header onSearchSubmit={handleSearchSubmit} isSignedIn />
       <div className={classes.wrapper}>
         <div className={classes.sidebar}>
           { sidebar }
@@ -49,6 +57,7 @@ const AppLayout = ({ children, sidebar }) => {
           { children }
         </Container>
       </div>
+      {!!redirectTo && <Redirect to={redirectTo} /> }
     </div>
   );
 };

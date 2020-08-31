@@ -2,9 +2,10 @@
   "extends": "airbnb",
   "globals": {
     "fetch": false,
-    "require": false,
   },
   "rules": {
+    "react/forbid-prop-types": "off",
+    "no-underscore-dangle": "off",
     "linebreak-style": "off",
-  },
+  }
 }

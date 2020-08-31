@@ -7,7 +7,11 @@ export default createMuiTheme({
   palette: {
     background: { default: '#FAFBFF' },
     primary: { main: primaryColor },
-    gray: { main: '#E9EDFA' },
+    gray: {
+      light: '#E9EDFA',
+      medium: '#939393',
+      dark: '#808080',
+    },
   },
   shape: {
     borderRadius: 100,
@@ -67,7 +71,32 @@ export default createMuiTheme({
           opacity: 1,
         },
       },
-
+    },
+    MuiToggleButtonGroup: {
+      root: {
+        backgroundColor: '#EAEEFD',
+      },
+      groupedHorizontal: {
+        '&&': {
+          borderRadius: 100,
+          border: '6px solid #EAEEFD',
+        },
+      },
+    },
+    MuiToggleButton: {
+      root: {
+        padding: '5px 15px',
+        color: primaryColor,
+        fontWeight: 'bold',
+        textTransform: 'none',
+        '&.Mui-selected': {
+          backgroundColor: primaryColor,
+          color: 'white',
+          '&&:hover': {
+            backgroundColor: primaryColor,
+          },
+        },
+      },
     },
   },
 });
