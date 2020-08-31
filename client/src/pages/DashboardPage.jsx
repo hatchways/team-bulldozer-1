@@ -9,7 +9,7 @@ import SearchApi from '../utils/api/SearchApi';
 import MentionList from '../components/Mention/MentionList';
 import { UserContext } from '../contexts/User';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
   },
   header: {
@@ -24,7 +24,7 @@ const DashboardPage = () => {
 
   const { user } = useContext(UserContext);
   const { search } = useContext(SearchContext);
-  const [debouncedSearch] = useDebounce(search, 300);
+  const [debouncedSearch] = useDebounce(search, 500);
 
   const [isLoading, setisLoading] = useState(true);
   const [mentions, setMentions] = useState([]);
@@ -65,7 +65,7 @@ const DashboardPage = () => {
           </ToggleButton>
         </ToggleButtonGroup>
       </header>
-      <MentionList isLoading={isLoading} mentions={mentions} />
+      <MentionList isLoading={isLoading} mentions={mentions} termToHighlight={search} />
     </main>
   );
 };

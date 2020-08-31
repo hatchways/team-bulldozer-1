@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MentionItem = ({ mention }) => {
+const MentionItem = ({ mention, termToHighlight }) => {
   const classes = useStyles();
   const { CRAWLERS } = consts;
   const {
@@ -63,13 +63,27 @@ const MentionItem = ({ mention }) => {
       <img className={classes.image} src={thumbnail} alt={`Thumbnail for mention ${title}`} />
       <div className={classes.content}>
         <h3 className={classes.title}>
-          {!!title && <TextWithHighlightedTerm text={title} term="Apple" termClassName={classes.highlighted} />}
+          {!!title
+          && (
+            <TextWithHighlightedTerm
+              text={title}
+              term={termToHighlight}
+              termClassName={classes.highlighted}
+            />
+          )}
         </h3>
         <div className={classes.source}>
           {CRAWLERS.find((crawler) => crawler.name === source).label}
         </div>
         <p className={classes.body}>
-          { body }
+          {!!body
+          && (
+            <TextWithHighlightedTerm
+              text={body}
+              term={termToHighlight}
+              termClassName={classes.highlighted}
+            />
+          )}
         </p>
       </div>
     </a>
@@ -78,6 +92,11 @@ const MentionItem = ({ mention }) => {
 
 MentionItem.propTypes = {
   mention: PropTypes.object.isRequired,
+  termToHighlight: PropTypes.string,
+};
+
+MentionItem.defaultProps = {
+  termToHighlight: null,
 };
 
 export default MentionItem;

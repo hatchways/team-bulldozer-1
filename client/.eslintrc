@@ -5,6 +5,7 @@
     "require": false
   },
   "rules": {
-    "react/forbid-prop-types": "off"
+    "react/forbid-prop-types": "off",
+    "no-underscore-dangle": "off"
   }
 }

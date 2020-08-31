@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import {
@@ -91,13 +91,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = ({ isLandingPage, isSignedIn }) => {
+const Header = ({ isLandingPage, isSignedIn, onSearchSubmit }) => {
   const classes = useStyles();
 
   const { search, setSearch } = useContext(SearchContext);
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    onSearchSubmit();
   };
 
   return (
@@ -108,7 +113,7 @@ const Header = ({ isLandingPage, isSignedIn }) => {
           {isSignedIn
             ? (
               <>
-                <div className={classes.search}>
+                <form onSubmit={handleSearchSubmit} className={classes.search}>
                   <InputBase
                     placeholder="Search in your mentions"
                     classes={{
@@ -121,7 +126,7 @@ const Header = ({ isLandingPage, isSignedIn }) => {
                   <div className={classes.searchIcon}>
                     <SearchIcon color="primary" />
                   </div>
-                </div>
+                </form>
                 <IconButton
                   component={Link}
                   to="/settings"
@@ -155,11 +160,13 @@ const Header = ({ isLandingPage, isSignedIn }) => {
 Header.propTypes = {
   isLandingPage: PropTypes.bool,
   isSignedIn: PropTypes.bool,
+  onSearchSubmit: PropTypes.func,
 };
 
 Header.defaultProps = {
   isLandingPage: false,
   isSignedIn: false,
+  onSearchSubmit: () => {},
 };
 
 export default Header;
