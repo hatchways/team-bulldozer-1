@@ -3,5 +3,8 @@
   "globals": {
     "fetch": false,
     "require": false,
-  }
+  },
+  "rules": {
+    "linebreak-style": "off",
+  },
 }
