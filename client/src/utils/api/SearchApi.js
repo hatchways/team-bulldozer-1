@@ -1,6 +1,7 @@
 import axios from 'axios';
+import consts from '../consts';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const { API_URL } = consts.env;
 
 export default class SearchApi {
   static search(type, term) {
