@@ -4,7 +4,9 @@ const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const config = require('../config');
 
-const redisClient = redis.createClient(config.redis.uri);
+const { createRedisClient } = require('../config/redis');
+
+const redisClient = createRedisClient();
 const sessionStore = new RedisStore({ client: redisClient });
 
 module.exports = {
