@@ -1,6 +1,15 @@
+/* eslint-disable no-param-reassign */
 const mongoose = require('../config/mongoose');
 
 const { Schema } = mongoose;
+
+function truncateBody(str) {
+  const len = 500;
+  if (str.length <= len) {
+    return str;
+  }
+  return `${str.slice(0, len)}...`;
+}
 
 const Result = new Schema({
   // Crawler Name
@@ -8,15 +17,18 @@ const Result = new Schema({
     type: String,
     required: true,
     index: { unique: false },
+    trim: true,
   },
   type: {
     type: String,
     required: true,
     index: { unique: false },
+    trim: true,
   },
   author: {
     type: String,
     required: false,
+    trim: true,
   },
   date: {
     type: Date,
@@ -26,11 +38,13 @@ const Result = new Schema({
     type: String,
     required: true,
     index: { unique: false },
+    trim: true,
   },
   body: {
     type: String,
     required: true,
     index: { unique: false },
+    trim: true,
   },
   url: {
     type: String,
@@ -72,6 +86,21 @@ Result.statics.search = async function search(term = '', crawlers, type) {
   }, {}, { limit: 100 })
     .sort({ 'meta.sentiment': -1 });
 };
+
+function trimBodyPlugin(schema, options) {
+  schema.post(['find', 'findOne'], (docs) => {
+    if (Array.isArray(docs)) {
+      docs = docs.map((doc) => {
+        doc.body = truncateBody(doc.body);
+        return doc;
+      });
+    } else {
+      docs.body = truncateBody(docs.body);
+    }
+  });
+}
+
+Result.plugin(trimBodyPlugin);
 
 const Model = mongoose.model('Result', Result);
 
