@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.gray.dark,
     fontSize: '.9rem',
     lineHeight: 1.5,
+    lineBreak: 'anywhere',
   },
   highlighted: {
     color: theme.palette.primary.main,
@@ -99,25 +100,33 @@ const MentionItem = ({ mention, termToHighlight }) => {
     <a className={classes.root} href={url} target="_blank" rel="noopener noreferrer">
       <img className={classes.image} src={thumbnail} alt={`Thumbnail for mention ${title}`} />
       <div className={classes.content}>
-        <h3 className={classes.title}>
-          {!!title && (
-            <TextWithHighlightedTerm
-              text={title}
-              term={termToHighlight}
-              termClassName={classes.highlighted}
-            />
-          )}
-        </h3>
+        {!!title && (
+          <h3 className={classes.title}>
+            {termToHighlight
+              ? (
+                <TextWithHighlightedTerm
+                  text={title}
+                  term={termToHighlight}
+                  termClassName={classes.highlighted}
+                />
+              )
+              : title }
+          </h3>
+        )}
         <div className={classes.source}>
           {CRAWLERS.find((crawler) => crawler.name === source).label}
         </div>
         {!!body && (
           <p className={classes.body}>
-            <TextWithHighlightedTerm
-              text={body}
-              term={termToHighlight}
-              termClassName={classes.highlighted}
-            />
+            {termToHighlight
+              ? (
+                <TextWithHighlightedTerm
+                  text={body}
+                  term={termToHighlight}
+                  termClassName={classes.highlighted}
+                />
+              )
+              : body }
           </p>
         )}
         {!!sentimentIcon && (
