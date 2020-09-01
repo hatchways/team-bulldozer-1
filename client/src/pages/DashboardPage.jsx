@@ -65,7 +65,7 @@ const DashboardPage = () => {
           </ToggleButton>
         </ToggleButtonGroup>
       </header>
-      <MentionList isLoading={isLoading} mentions={mentions} termToHighlight={search} />
+      <MentionList isLoading={isLoading} mentions={mentions} termToHighlight={debouncedSearch} />
     </main>
   );
 };
