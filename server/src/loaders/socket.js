@@ -16,7 +16,7 @@ function onAuthorizeFail(data, message, error, accept) {
 }
 
 function broadcastCount(io, connectedUsers) {
-  io.emit('connected_user', connectedUsers.size);
+  io.emit('connected_user', Object.keys(connectedUsers).length);
 }
 
 module.exports = async (server) => {
@@ -44,21 +44,41 @@ module.exports = async (server) => {
     fail: onAuthorizeFail, // *optional* callback on fail/error - read more below
   }));
 
-  const connectedUsers = new Set();
+  const connectedUsers = {};
+
+  const emitTest = (socket) => {
+    const response = new Date();
+    // Emitting a new message. Will be consumed by the client
+    socket.emit('test', response);
+  };
+
+  // ########## Test ##########
+  let interval;
 
   io.on('connection', (socket) => {
     // User connected, keep track of him
-    if (!socket.user) {
+    if (!(socket.request.user && socket.request.user.logged_in)) {
       socket.disconnect();
       return;
     }
     const { id } = socket;
-    connectedUsers.add(id);
+    connectedUsers[id] = {
+      socket: id,
+      user: socket.request.user,
+    };
+
     broadcastCount(io, connectedUsers);
 
+    // ########## Test ##########
+    if (interval) {
+      clearInterval(interval);
+    }
+    setInterval(() => emitTest(socket), 1000);
+
     socket.on('disconnect', () => {
-      connectedUsers.delete(id);
+      delete connectedUsers[id];
       broadcastCount(io, connectedUsers);
+      clearInterval(interval);
     });
   });
 };
