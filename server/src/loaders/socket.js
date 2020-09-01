@@ -1,7 +1,8 @@
 /* eslint-disable global-require */
 const config = require('../config');
 const { sessionStore } = require('./session');
-const user = require('../models/user');
+const { User } = require('../models/user');
+const { Result } = require('../models/result');
 
 function onAuthorizeSuccess(data, accept) {
   // The accept-callback still allows us to decide whether to
@@ -46,10 +47,14 @@ module.exports = async (server) => {
 
   const connectedUsers = {};
 
-  const emitTest = (socket) => {
-    const response = new Date();
+  const emitTest = async (socket) => {
     // Emitting a new message. Will be consumed by the client
-    socket.emit('test', response);
+
+    const count = await Result.countDocuments();
+    const random = Math.floor(Math.random() * count);
+
+    const res = await Result.findOne().skip(random);
+    socket.emit('mention', res);
   };
 
   // ########## Test ##########
@@ -73,7 +78,7 @@ module.exports = async (server) => {
     if (interval) {
       clearInterval(interval);
     }
-    setInterval(() => emitTest(socket), 1000);
+    setInterval(() => emitTest(socket), 3000);
 
     socket.on('disconnect', () => {
       delete connectedUsers[id];
