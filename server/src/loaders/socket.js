@@ -26,18 +26,6 @@ function broadcastConnectionCount(io) {
   io.emit('connected_user', Object.keys(connections).length);
 }
 
-// ########## Test BEGIN ##########
-let interval;
-const emitTest = async (socket) => {
-  // Emitting a new message. Will be consumed by the client
-  const count = await Result.countDocuments();
-  const random = Math.floor(Math.random() * count);
-
-  const res = await Result.findOne().skip(random);
-  socket.emit('mention', res);
-};
-// ########## Test END   ##########
-
 /**
  * Emit `mention` event to socket.io users based on their search criteria OR their terms
  * @param {number} socketId Socket id
@@ -102,19 +90,9 @@ function subscribeOrDisconnectSocket(io, socket) {
 
   broadcastConnectionCount(io);
 
-  // ########## Test BEGIN ##########
-  // if (interval) {
-  //   clearInterval(interval);
-  // }
-  // setInterval(() => emitTest(socket), 3000);
-  // ########## Test END ############
-
   socket.on('disconnect', () => {
     delete connections[id];
     broadcastConnectionCount(io);
-    // ########## Test BEGIN ##########
-    // clearInterval(interval);
-    // ########## Test END ############
 
     mentionSubscriber.unsubscribe();
     mentionSubscriber.quit();
