@@ -89,6 +89,8 @@ Result.statics.search = async function search(term = '', crawlers, type) {
 
 function trimBodyPlugin(schema, options) {
   schema.post(['find', 'findOne'], (docs) => {
+    if (docs === undefined || docs === null) { return; }
+
     if (Array.isArray(docs)) {
       docs = docs.map((doc) => {
         doc.body = truncateBody(doc.body);
