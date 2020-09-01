@@ -69,7 +69,8 @@ Result.statics.search = async function search(term = '', crawlers, type) {
     ],
     source: { $in: crawlers },
     type,
-  }).sort({ 'meta.sentiment': -1 });
+  }, {}, { limit: 100 })
+    .sort({ 'meta.sentiment': -1 });
 };
 
 const Model = mongoose.model('Result', Result);
