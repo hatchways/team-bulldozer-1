@@ -19,6 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "copy": "cpr build ../server/src/public --delete-first --overwrite",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint ./src/"
@@ -39,6 +40,7 @@
     ]
   },
   "devDependencies": {
+    "cpr": "^3.0.1",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.0",
