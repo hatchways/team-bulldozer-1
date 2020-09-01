@@ -2,12 +2,17 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
+import socketIOClient from 'socket.io-client';
 
 import { SearchContext } from '../contexts/Search';
 import SearchApi from '../utils/api/SearchApi';
 
 import MentionList from '../components/Mention/MentionList';
 import { UserContext } from '../contexts/User';
+
+import consts from '../utils/consts';
+
+const { SOCKET_URL } = consts.env;
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -44,6 +49,18 @@ const DashboardPage = () => {
           setisLoading(false);
         });
     }
+
+    const socket = socketIOClient(SOCKET_URL, {
+      query: `type=${sort}&term=${debouncedSearch}`,
+    });
+
+    socket.on('mention', (data) => {
+      // Spread operator, wrapper function (recommended)
+      setMentions((previous) => [data, ...previous]);
+    });
+
+    // Clean up the socket
+    return () => socket.disconnect();
   }, [debouncedSearch, sort, user]);
 
   const handleSortChange = (event, newSort) => {

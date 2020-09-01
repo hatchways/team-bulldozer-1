@@ -66,10 +66,16 @@ module.exports = async (server) => {
       socket.disconnect();
       return;
     }
+
+    // Get type and search from query
+    const { type, search } = socket.handshake.query;
+
     const { id } = socket;
     connectedUsers[id] = {
       socket: id,
       user: socket.request.user,
+      type,
+      search,
     };
 
     broadcastCount(io, connectedUsers);
