@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import socketIOClient from 'socket.io-client';
 
 import { Fade, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import MentionItem from './MentionItem';
-const ENDPOINT = 'http://localhost:3001';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,17 +34,6 @@ const MentionList = ({
 
   const [currentPage, setCurrentPage] = useState(1);
   const [displayedMentions, setDisplayedMentions] = useState();
-  const [lastResponse, setLastResponse] = useState('');
-
-  useEffect(() => {
-    const socket = socketIOClient(ENDPOINT);
-    socket.on('test', (data) => {
-      setLastResponse(data);
-    });
-
-    // Clean up the socket
-    return () => socket.disconnect();
-  }, []);
 
   useEffect(() => {
     setDisplayedMentions(mentions.slice(0, currentPage * pageSize));
@@ -82,7 +69,6 @@ const MentionList = ({
     )
     : (
       <div className={classes.loadingWrapper}>
-        <p>{lastResponse}</p>
         { isLoading
           ? <CircularProgress className={classes.loading} />
           : <div>No mentions were found for your current search criteria.</div>}
