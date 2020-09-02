@@ -3,6 +3,7 @@ const config = require('./index');
 
 module.exports = {
   redis,
+  // Redis client factory
   createRedisClient: () => {
     const client = redis.createClient({
       port: config.redis.port,
