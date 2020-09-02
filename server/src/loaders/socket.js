@@ -79,9 +79,11 @@ function subscribeOrDisconnectSocket(io, socket) {
   };
 
   // Update search term
-  socket.on('search', (data) => {
+  socket.on('🔎', (data) => {
     connections[id].search = data.search;
     connections[id].type = data.type;
+    // Confirm msg reception
+    socket.send('👌');
   });
 
   /**

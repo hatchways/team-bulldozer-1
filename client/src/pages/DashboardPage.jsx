@@ -37,8 +37,20 @@ const DashboardPage = () => {
   const [mentions, setMentions] = useState([]);
   const [sort, setSort] = useState('recent');
 
+  function emitSearch(term, type) {
+    // Emit search event to backend to update our subscribtion
+    socket.emit('🔎', {
+      search: term,
+      type,
+    });
+  }
+
   useEffect(() => {
-    socket = socketIOClient(SOCKET_URL);
+    socket = socketIOClient(`${SOCKET_URL}?search=${debouncedSearch}&type=${sort}`);
+
+    socket.on('reconnect', () => {
+      emitSearch(debouncedSearch, sort);
+    });
 
     socket.on('mention', (data) => {
       // Spread operator, wrapper function (recommended)
@@ -52,10 +64,8 @@ const DashboardPage = () => {
   useEffect(() => {
     if (!debouncedSearch.length || debouncedSearch.length >= 3) {
       // Emit search event to backend to update our subscribtion
-      socket.emit('search', {
-        search: debouncedSearch,
-        type: sort,
-      });
+      emitSearch(debouncedSearch, sort);
+
       setisLoading(true);
       SearchApi.search(sort, debouncedSearch)
         .then((response) => {
