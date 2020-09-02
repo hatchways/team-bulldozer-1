@@ -16,13 +16,11 @@ const Result = new Schema({
   source: {
     type: String,
     required: true,
-    index: { unique: false },
     trim: true,
   },
   type: {
     type: String,
     required: true,
-    index: { unique: false },
     trim: true,
   },
   author: {
@@ -37,13 +35,11 @@ const Result = new Schema({
   title: {
     type: String,
     required: true,
-    index: { unique: false },
     trim: true,
   },
   body: {
     type: String,
     required: true,
-    index: { unique: false },
     trim: true,
   },
   url: {
@@ -69,6 +65,9 @@ const Result = new Schema({
 }, { timestamps: true });
 
 Result.index({ source: 1, type: 1, url: 1 }, { unique: true });
+Result.index({
+  source: 1, type: 1, title: 'text', body: 'text',
+});
 
 /**
  * Find recent mentions
