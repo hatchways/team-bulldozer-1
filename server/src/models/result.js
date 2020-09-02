@@ -87,6 +87,9 @@ Result.statics.search = async function search(term = '', crawlers, type) {
     .sort({ 'meta.sentiment': -1 });
 };
 
+/**
+ * Plugin to trim body text on read
+ */
 function trimBodyPlugin(schema, options) {
   schema.post(['find', 'findOne'], (docs) => {
     if (docs === undefined || docs === null) { return; }
@@ -102,6 +105,7 @@ function trimBodyPlugin(schema, options) {
   });
 }
 
+// Register our plugin
 Result.plugin(trimBodyPlugin);
 
 const Model = mongoose.model('Result', Result);
