@@ -78,6 +78,12 @@ function subscribeOrDisconnectSocket(io, socket) {
     search,
   };
 
+  // Update search term
+  socket.on('search', (data) => {
+    connections[id].search = data.search;
+    connections[id].type = data.type;
+  });
+
   /**
    * Redis pub/sub subscriber per client
    * Can be optimized by reusing subscriber.

@@ -24,6 +24,8 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+let socket;
+
 const DashboardPage = () => {
   const classes = useStyles();
 
@@ -36,7 +38,24 @@ const DashboardPage = () => {
   const [sort, setSort] = useState('recent');
 
   useEffect(() => {
+    socket = socketIOClient(SOCKET_URL);
+
+    socket.on('mention', (data) => {
+      // Spread operator, wrapper function (recommended)
+      setMentions((previous) => [data, ...previous]);
+    });
+
+    // Clean up the socket
+    return () => socket.disconnect();
+  }, []);
+
+  useEffect(() => {
     if (!debouncedSearch.length || debouncedSearch.length >= 3) {
+      // Emit search event to backend to update our subscribtion
+      socket.emit('search', {
+        search: debouncedSearch,
+        type: sort,
+      });
       setisLoading(true);
       SearchApi.search(sort, debouncedSearch)
         .then((response) => {
@@ -49,18 +68,6 @@ const DashboardPage = () => {
           setisLoading(false);
         });
     }
-
-    const socket = socketIOClient(SOCKET_URL, {
-      query: `type=${sort}&term=${debouncedSearch}`,
-    });
-
-    socket.on('mention', (data) => {
-      // Spread operator, wrapper function (recommended)
-      setMentions((previous) => [data, ...previous]);
-    });
-
-    // Clean up the socket
-    return () => socket.disconnect();
   }, [debouncedSearch, sort, user]);
 
   const handleSortChange = (event, newSort) => {
