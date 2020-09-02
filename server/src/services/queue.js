@@ -1,6 +1,9 @@
 const Queue = require('bull');
 
 const { User } = require('../models');
+
+const searchQueue = require('../queues/search');
+
 const searchProcessor = require('./processors/search');
 const config = require('../config');
 
@@ -11,7 +14,6 @@ const config = require('../config');
  */
 function addToSearchQueue(search, priority = 9) {
   try {
-    const searchQueue = new Queue('search', config.redis.uri);
     searchQueue.add({ search }, { priority });
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -24,8 +26,6 @@ function addToSearchQueue(search, priority = 9) {
  */
 function startSearchQueueProcessing() {
   // Start queue processor
-  const searchQueue = new Queue('search', config.redis.uri);
-  // (could also have been done through another queue)
   searchQueue.on('completed', searchProcessor.saveSearchResult);
   searchQueue.process(searchProcessor.processSearchJob);
 }

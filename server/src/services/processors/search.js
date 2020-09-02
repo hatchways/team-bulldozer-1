@@ -3,6 +3,8 @@ require('../typedef');
 const { analyze } = require('../emotion');
 const { Result } = require('../../models');
 
+const { createRedisClient } = require('../../config/redis');
+
 const { CrawlerEngine } = require('../crawler');
 
 /**
@@ -56,7 +58,7 @@ async function saveSearchResult(job, result) {
   }
 
   // Upsert records
-  const updates = result.map(async (record) => {
+  await result.map(async (record) => {
     await Result.findOneAndUpdate({
       // Considered as our document unique key
       source: record.source,
@@ -68,7 +70,14 @@ async function saveSearchResult(job, result) {
     });
   });
 
-  return Promise.all(updates);
+  // TODO: Should we retrieve back record id?
+
+  // Publish event to redis so each server instance can broadcast to their users
+  const client = createRedisClient();
+  await result.map((r) => client.publish('found', JSON.stringify(r)));
+  client.quit();
+
+  return true;
 }
 
 module.exports = {

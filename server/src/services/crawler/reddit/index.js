@@ -31,10 +31,10 @@ async function search(term, type) {
   const query = {
     q: term,
     limit: 50,
-    sort: type,
+    sort: type === 'popular' ? 'hot' : 'new',
   };
   const posts = await reddit.get('/search', query);
-  return posts.data.children.map((result) => convert(query.result_type, result));
+  return posts.data.children.map((result) => convert(type, result));
 }
 
 /**
@@ -42,6 +42,6 @@ async function search(term, type) {
  */
 module.exports = {
   name: 'reddit',
-  findPopular: (term) => search(term, 'hot'),
-  findRecent: (term) => search(term, 'new'),
+  findPopular: (term) => search(term, 'popular'),
+  findRecent: (term) => search(term, 'recent'),
 };
