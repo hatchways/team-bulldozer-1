@@ -10,8 +10,6 @@ import MentionList from '../components/Mention/MentionList';
 import { UserContext } from '../contexts/User';
 
 const useStyles = makeStyles(() => ({
-  root: {
-  },
   header: {
     display: 'flex',
     justifyContent: 'space-between',

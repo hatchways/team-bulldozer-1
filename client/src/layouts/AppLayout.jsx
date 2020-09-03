@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+import AuthApi from '../utils/api/AuthApi';
+import { UserContext } from '../contexts/User';
 
 import Header from '../components/Header';
 
@@ -40,10 +42,24 @@ const useStyles = makeStyles((theme) => {
 
 const AppLayout = ({ children, sidebar }) => {
   const classes = useStyles();
-  const [redirectTo, setRedirectTo] = useState();
 
-  const handleSearchSubmit = () =>{
+  const { setUser } = useContext(UserContext);
+  const [redirectTo, setRedirectTo] = useState();
+  const [currentSidebarTab, setCurrentSidebarTab] = useState(0);
+
+  const handleSearchSubmit = () => {
     setRedirectTo('/dashboard');
+  };
+
+  const handleSidebarTabChange = (newCurrentTab) => {
+    setCurrentSidebarTab(newCurrentTab);
+  };
+
+  const handleLogout = () => {
+    AuthApi.logout()
+      .then(() => {
+        setUser(null);
+      });
   };
 
   return (
@@ -51,10 +67,14 @@ const AppLayout = ({ children, sidebar }) => {
       <Header onSearchSubmit={handleSearchSubmit} isSignedIn />
       <div className={classes.wrapper}>
         <div className={classes.sidebar}>
-          { sidebar }
+          { React.cloneElement(sidebar, {
+            currentSidebarTab,
+            handleSidebarTabChange,
+            handleLogout,
+          }) }
         </div>
         <Container className={classes.content}>
-          { children }
+          { React.cloneElement(children, { currentSidebarTab }) }
         </Container>
       </div>
       {!!redirectTo && <Redirect to={redirectTo} /> }
