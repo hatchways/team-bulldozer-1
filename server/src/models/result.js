@@ -1,22 +1,32 @@
+/* eslint-disable no-param-reassign */
 const mongoose = require('../config/mongoose');
 
 const { Schema } = mongoose;
+
+function truncateBody(str) {
+  const len = 500;
+  if (str.length <= len) {
+    return str;
+  }
+  return `${str.slice(0, len)}...`;
+}
 
 const Result = new Schema({
   // Crawler Name
   source: {
     type: String,
     required: true,
-    index: { unique: false },
+    trim: true,
   },
   type: {
     type: String,
     required: true,
-    index: { unique: false },
+    trim: true,
   },
   author: {
     type: String,
     required: false,
+    trim: true,
   },
   date: {
     type: Date,
@@ -25,12 +35,12 @@ const Result = new Schema({
   title: {
     type: String,
     required: true,
-    index: { unique: false },
+    trim: true,
   },
   body: {
     type: String,
     required: true,
-    index: { unique: false },
+    trim: true,
   },
   url: {
     type: String,
@@ -55,6 +65,9 @@ const Result = new Schema({
 }, { timestamps: true });
 
 Result.index({ source: 1, type: 1, url: 1 }, { unique: true });
+Result.index({
+  source: 1, type: 1, title: 'text', body: 'text',
+});
 
 /**
  * Find recent mentions
@@ -69,8 +82,30 @@ Result.statics.search = async function search(term = '', crawlers, type) {
     ],
     source: { $in: crawlers },
     type,
-  }).sort({ 'meta.sentiment': -1 });
+  }, {}, { limit: 100 })
+    .sort({ 'meta.sentiment': -1 });
 };
+
+/**
+ * Plugin to trim body text on read
+ */
+function trimBodyPlugin(schema, options) {
+  schema.post(['find', 'findOne'], (docs) => {
+    if (docs === undefined || docs === null) { return; }
+
+    if (Array.isArray(docs)) {
+      docs = docs.map((doc) => {
+        doc.body = truncateBody(doc.body);
+        return doc;
+      });
+    } else {
+      docs.body = truncateBody(docs.body);
+    }
+  });
+}
+
+// Register our plugin
+Result.plugin(trimBodyPlugin);
 
 const Model = mongoose.model('Result', Result);
 

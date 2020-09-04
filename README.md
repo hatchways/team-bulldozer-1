@@ -28,6 +28,8 @@
 
 ### Required API keys
 
+:heavy_exclamation_mark: These API keys are required to start backend
+
 - [Twitter](https://developer.twitter.com/en/apps)
 - [Reddit](https://www.reddit.com/prefs/apps)
 
