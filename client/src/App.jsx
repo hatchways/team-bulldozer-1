@@ -8,6 +8,8 @@ import { Alert } from '@material-ui/lab';
 import theme from './themes/theme';
 
 import AuthApi from './utils/api/AuthApi';
+
+import { SearchProvider } from './contexts/Search';
 import { UserProvider } from './contexts/User';
 
 import DashboardPage from './pages/DashboardPage';
@@ -17,7 +19,6 @@ import SignUpPage from './pages/SignUpPage';
 import WrappedRoute from './components/WrappedRoute';
 import CrawlerSidebar from './components/Sidebar/CrawlerSidebar';
 import SettingsSidebar from './components/Sidebar/SettingsSidebar';
-import { SearchProvider } from './contexts/Search'
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);

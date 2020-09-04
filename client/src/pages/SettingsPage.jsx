@@ -20,12 +20,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SettingsPage = ({ currentSidebarTab }) => {
+const SettingsPage = ({ currentSidebarTabIndex }) => {
   const classes = useStyles();
+
   const { user, setUser } = useContext(UserContext);
   const { terms, email } = user;
+
   const [fields, setFields] = useState({ terms, email });
-  const [errors, setErrors] = useState({ terms, email });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (field, value) => {
     setFields({
@@ -36,18 +38,24 @@ const SettingsPage = ({ currentSidebarTab }) => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    AuthApi.setProfileInfo({ terms, email })
+    AuthApi.setProfileInfo({ terms: fields.terms, email: fields.email })
       .then((response) => {
         setUser(response.data);
+        setErrors({ success: 'Successfully edited your profile.' });
       })
-      .catch((error) => {
-        setErrors((oldErrors) => ({ ...oldErrors, general: error }));
+      .catch(() => {
+        setErrors((oldErrors) => ({ ...oldErrors, general: 'An error occurred while trying to edit your profile.' }));
       });
+  };
+
+  const statusToDisplay = errors.general || errors.success;
+  const handleStatusClose = () => {
+    setErrors({});
   };
 
   return (
     <main className={classes.root}>
-      <SettingsPanel index={0} value={currentSidebarTab} label="Company">
+      <SettingsPanel index={0} value={currentSidebarTabIndex} label="Company">
         <form onSubmit={handleFormSubmit}>
           <SettingsField label="Your company">
             <SettingsListField
@@ -59,12 +67,13 @@ const SettingsPage = ({ currentSidebarTab }) => {
           <SettingsField label="Weekly report">
             <SettingsTextField
               id="email"
+              type="email"
               required
               placeholder="Weekly report"
               value={fields.email}
+              onChange={(value) => handleChange('email', value)}
             />
           </SettingsField>
-
           <Button
             className={classes.button}
             color="primary"
@@ -73,10 +82,10 @@ const SettingsPage = ({ currentSidebarTab }) => {
           >
             Submit
           </Button>
-          {errors.general ? (
-            <Snackbar open={!!errors.general} autoHideDuration={2000}>
-              <Alert severity="error">
-                { errors.general }
+          {statusToDisplay ? (
+            <Snackbar open={!!statusToDisplay} onClose={handleStatusClose} autoHideDuration={2000}>
+              <Alert severity={errors.success ? 'success' : 'error'}>
+                { statusToDisplay }
               </Alert>
             </Snackbar>
           ) : null }
@@ -87,11 +96,11 @@ const SettingsPage = ({ currentSidebarTab }) => {
 };
 
 SettingsPage.propTypes = {
-  currentSidebarTab: PropTypes.number,
+  currentSidebarTabIndex: PropTypes.number,
 };
 
 SettingsPage.defaultProps = {
-  currentSidebarTab: 0,
+  currentSidebarTabIndex: 0,
 };
 
 export default SettingsPage;

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const SettingsPanel = ({ children, index, value, ...otherProps }) => (
+const SettingsPanel = ({ children, index, value, ...rest }) => (
   <div
     role="tabpanel"
     hidden={value !== index}
     id={`settingsPanel-${index}`}
-    {...otherProps}
+    {...rest}
   >
     {value === index && (
       <div>
@@ -20,11 +20,11 @@ SettingsPanel.propTypes = {
   children: PropTypes.any.isRequired,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
-  otherProps: PropTypes.object,
+  rest: PropTypes.object,
 };
 
 SettingsPanel.defaultProps = {
-  otherProps: {},
+  rest: {},
 };
 
 export default SettingsPanel;

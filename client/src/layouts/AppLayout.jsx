@@ -45,14 +45,14 @@ const AppLayout = ({ children, sidebar }) => {
 
   const { setUser } = useContext(UserContext);
   const [redirectTo, setRedirectTo] = useState();
-  const [currentSidebarTab, setCurrentSidebarTab] = useState(0);
+  const [currentSidebarTabIndex, setCurrentSidebarTabIndex] = useState(0);
 
   const handleSearchSubmit = () => {
     setRedirectTo('/dashboard');
   };
 
   const handleSidebarTabChange = (newCurrentTab) => {
-    setCurrentSidebarTab(newCurrentTab);
+    setCurrentSidebarTabIndex(newCurrentTab);
   };
 
   const handleLogout = () => {
@@ -68,13 +68,13 @@ const AppLayout = ({ children, sidebar }) => {
       <div className={classes.wrapper}>
         <div className={classes.sidebar}>
           { React.cloneElement(sidebar, {
-            currentSidebarTab,
+            currentSidebarTabIndex,
             handleSidebarTabChange,
             handleLogout,
           }) }
         </div>
         <Container className={classes.content}>
-          { React.cloneElement(children, { currentSidebarTab }) }
+          { React.cloneElement(children, { currentSidebarTabIndex }) }
         </Container>
       </div>
       {!!redirectTo && <Redirect to={redirectTo} /> }

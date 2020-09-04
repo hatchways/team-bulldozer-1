@@ -42,11 +42,14 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(6),
     paddingLeft: theme.spacing(2),
     fontSize: '1.8rem',
+    lineHeight: 1,
   },
   icon: {
     fill: theme.palette.primary.main,
+    marginTop: 2,
+    marginLeft: theme.spacing(2),
     width: '1.25em',
-    height: '1.25em',
+    height: '1.1em',
   },
 }));
 

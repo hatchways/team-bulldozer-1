@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+
 import SettingsTextField from './SettingsTextField';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,6 +25,10 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       boxShadow: 'none',
     },
+    '&.Mui-disabled': {
+      backgroundColor: fade(theme.palette.primary.main, 0.1),
+      color: fade(theme.palette.primary.main, 0.4),
+    },
   },
   buttonRemove: {
     backgroundColor: fade(theme.palette.primary.main, 0.1),
@@ -39,32 +44,32 @@ const SettingsListField = ({ value, onItemsChange, placeholder }) => {
   const [items, setItems] = useState(value);
   const [newItem, setNewItem] = useState('');
 
-  const updateItems = useRef(onItemsChange);
-  useEffect(() => {
-    updateItems.current(items);
-  } , [items, updateItems]);
-
   const handleItemAdd = (itemToAdd) => {
     if (itemToAdd && itemToAdd.length) {
-      setItems((previousItems) => [...previousItems, itemToAdd]);
+      const newItems = [...items, itemToAdd];
+      setItems(newItems);
+      onItemsChange([...items, itemToAdd]);
       setNewItem('');
     }
   };
 
   const handleItemRemove = (itemToRemove) => {
-    setItems((previousItems) => previousItems.filter((item) => item !== itemToRemove));
+    const newItems = items.filter((item) => item !== itemToRemove);
+    setItems(newItems);
+    onItemsChange(newItems);
   };
 
   const handleItemChange = (index, newValue) => {
     const newItems = [...items];
     newItems[index] = newValue;
     setItems(newItems);
+    onItemsChange(newItems);
   };
 
   return (
     <div className={classes.root}>
       {items.map((item, index) => (
-        <div className={classes.item}>
+        <div className={classes.item} key={index}>
           <SettingsTextField
             className={classes.field}
             placeholder={placeholder}
@@ -75,6 +80,7 @@ const SettingsListField = ({ value, onItemsChange, placeholder }) => {
             className={`${classes.button} ${classes.buttonRemove}`}
             variant="contained"
             disabled={items.length <= 1}
+            title={items.length <= 1 ? 'Last element cannot be removed.' : ''}
             onClick={() => handleItemRemove(item)}
           >
             Remove
