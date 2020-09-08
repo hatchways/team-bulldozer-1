@@ -15,8 +15,6 @@ import consts from '../utils/consts';
 const { SOCKET_URL } = consts.env;
 
 const useStyles = makeStyles(() => ({
-  root: {
-  },
   header: {
     display: 'flex',
     justifyContent: 'space-between',

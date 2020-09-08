@@ -7,8 +7,8 @@ const TextWithHighlightedTerm = ({ text, term, termClassName }) => {
     <>
       { parts.map((part, i) => (
         <span key={i} className={part.toLowerCase() === term.toLowerCase() ? termClassName : ''}>
-            { part }
-          </span>
+          { part }
+        </span>
       ))}
     </>
   );
