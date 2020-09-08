@@ -13,6 +13,8 @@ const config = {
   cron: {
     // Repeat job once every day at 3:00 (am)
     fetch: { interval: process.env.CRON_FETCH_INTERVAL || '0 3 * * *' },
+    // At 08:00 on Monday
+    mail: { interval: process.env.CRON_MAIL_INTERVAL || '0 8 * * 1' },
   },
   mongo: {
     uri: process.env.MONGO_DB || 'mongodb://localhost',
