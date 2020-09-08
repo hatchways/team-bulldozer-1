@@ -1,0 +1,48 @@
+<mjml>
+  <mj-head>
+       <mj-font name="Montserrat" href="https://fonts.googleapis.com/css?family=Montserrat:wght@400;700" />
+	</mj-head>
+  <mj-body background-color="#FAFBFF">
+    <mj-spacer></mj-spacer>
+    <mj-section background-color="#5479e2">
+      <mj-column width="70%">
+        <mj-text align="center" padding-top="40px" font-size="25px" font-weight="700" color="#fff" font-family="Montserrat, Verdana">WEEKLY REPORT</mj-text>
+      </mj-column>
+      <mj-column width="30%">
+        <mj-text align="left" padding="0" padding-bottom="23" font-size="90px" font-weight="700" color="#6083e1" font-family="Montserrat, Verdana">@</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-text padding-left="0" padding-right="0" font-size="20px" font-family="Montserrat, Verdana">Your Mentions for {{date}}</mj-text>
+      </mj-column>
+    </mj-section>
+
+    {{#each mentions}}
+      <mj-section background-color="#fff">
+        <mj-column width="30%" padding-right="0">
+          <mj-image src="{{this.thumbnail}}"></mj-image>
+        </mj-column>
+        <mj-column width="70%">
+          <mj-text padding-bottom="0"  font-size="17px" font-family="Montserrat, Verdana">
+            {{this.title}}
+          </mj-text>
+          <mj-text padding-bottom="5" font-size="14px" color="#aaa" font-family="Montserrat, Verdana">
+            {{this.source}}
+          </mj-text>
+          <mj-text font-size="13px" line-height="1.5" color="#777" font-family="Montserrat, Verdana">
+            {{this.body}}
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      
+      <mj-spacer />
+    {{/each}}
+
+    <mj-section>
+      <mj-column>
+    		<mj-button href="{{url}}" align="center" background-color="#6583F2" border-radius="100px" font-family="Montserrat, Verdana" height="50px">SHOW MORE</mj-button>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
