@@ -46,7 +46,8 @@ async function processSearchJob(job, done) {
 
     done(null, records);
   } catch (error) {
-    // console.error(error);
+    // eslint-disable-next-line no-console
+    console.error(error);
   }
 }
 
@@ -63,23 +64,23 @@ async function saveSearchResult(job, result) {
 
   // Upsert records
   await result.map(async (record) => {
-    await Result.findOneAndUpdate({
+    const key = {
       // Considered as our document unique key
       source: record.source,
       type: record.type,
       url: record.url,
-    }, record, {
+    };
+    await Result.findOneAndUpdate(key, record, {
       new: true,
       upsert: true,
     });
+
+    // Publish event to redis so each server instance can broadcast to their users
+    const res = await Result.findOne(key);
+    const client = createRedisClient();
+    await client.publish('found', JSON.stringify(res));
+    client.quit();
   });
-
-  // TODO: Should we retrieve back record id?
-
-  // Publish event to redis so each server instance can broadcast to their users
-  const client = createRedisClient();
-  await result.map((r) => client.publish('found', JSON.stringify(r)));
-  client.quit();
 
   return true;
 }
