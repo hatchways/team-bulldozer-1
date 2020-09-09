@@ -17,6 +17,8 @@ const hydrate = require('../emails');
  * @param {number} [priority=9] 1 is top priority
  */
 function addToSearchQueue(search, priority = 9) {
+  // TODO: Keep track of recent search (through redis with TTL keys?)
+  // and avoid processing same query over and over again
   try {
     searchQueue.add({ search }, { priority });
   } catch (error) {
