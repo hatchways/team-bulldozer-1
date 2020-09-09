@@ -76,6 +76,10 @@ Result.index({
  * @param {string} Type Result type
  */
 Result.statics.search = async function search(term = '', crawlers, type) {
+  const sort = type === 'recent'
+    ? { date: -1 }
+    : { 'meta.sentiment': -1 };
+
   return this.find({
     $or: [
       { title: { $regex: term, $options: 'i' } },
@@ -83,8 +87,7 @@ Result.statics.search = async function search(term = '', crawlers, type) {
     ],
     source: { $in: crawlers },
     type,
-  }, {}, { limit: 100 })
-    .sort({ 'meta.sentiment': -1 });
+  }, {}, { limit: 100 }).sort(sort);
 };
 
 /**
