@@ -39,13 +39,17 @@ function emitMentionToConnectedUsers(socketId, channel, message) {
   // Convert mention
   const mention = JSON.parse(message);
 
+  if (!connections[socketId]) { return; }
   const {
     socket,
     type,
     search,
   } = connections[socketId];
 
+  // Is subscribed type?
   if (mention.type !== type) { return; }
+  // Is subscribed source?
+  if (socket.request.user.crawlers.findIndex((c) => c === mention.source) < 0) { return; }
 
   // Helper method
   const containsTerm = (term) => term !== undefined

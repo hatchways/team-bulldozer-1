@@ -3,6 +3,7 @@ import { useDebounce } from 'use-debounce';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import socketIOClient from 'socket.io-client';
+import { differenceBy } from 'lodash';
 
 import { SearchContext } from '../contexts/Search';
 import SearchApi from '../utils/api/SearchApi';
@@ -52,7 +53,13 @@ const DashboardPage = () => {
 
     socket.on('mention', (data) => {
       // Spread operator, wrapper function (recommended)
-      setMentions((previous) => [data, ...previous]);
+      setMentions((previous) => {
+        const newResults = differenceBy(data, previous, '_id');
+        if (newResults.length === 0) {
+          return previous;
+        }
+        return [newResults, ...previous];
+      });
     });
 
     // Clean up the socket

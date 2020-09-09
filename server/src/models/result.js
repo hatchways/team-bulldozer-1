@@ -72,9 +72,14 @@ Result.index({
 /**
  * Find recent mentions
  * @param {string} term Search term
- * @param {Array} types Crawlers to use
+ * @param {Array} crawlers Crawlers to use
+ * @param {string} Type Result type
  */
 Result.statics.search = async function search(term = '', crawlers, type) {
+  const sort = type === 'recent'
+    ? { date: -1 }
+    : { 'meta.sentiment': -1 };
+
   return this.find({
     $or: [
       { title: { $regex: term, $options: 'i' } },
@@ -82,8 +87,28 @@ Result.statics.search = async function search(term = '', crawlers, type) {
     ],
     source: { $in: crawlers },
     type,
-  }, {}, { limit: 100 })
-    .sort({ 'meta.sentiment': -1 });
+  }, {}, { limit: 100 }).sort(sort);
+};
+
+/**
+ * Find recent mentions
+ * @param {Date} from Date from
+ * @param {Date} to Date to
+ * @param {string} terms Search terms
+ * @param {Array} crawlers Crawlers to use
+ */
+Result.statics.latest = async function latest(from, to, terms, crawlers) {
+  const termsParams = terms.map((term) => [
+    { title: { $regex: term, $options: 'i' } },
+    { body: { $regex: term, $options: 'i' } },
+  ]).flat();
+  return this.find({
+    $or: termsParams,
+    source: { $in: crawlers },
+    type: 'recent',
+    date: { $gte: from, $lt: to },
+  }, {}, { limit: 5 })
+    .sort({ date: -1 });
 };
 
 /**

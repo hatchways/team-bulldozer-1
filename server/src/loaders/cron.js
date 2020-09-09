@@ -1,13 +1,17 @@
 const {
-  startProcessing,
+  startEmailQueueWorker,
+  startSearchQueueWorker,
   startDailyCron,
+  startWeeklyCron,
 } = require('../services/queue');
 
 // Start search queue processing
-startProcessing();
+startSearchQueueWorker();
+startEmailQueueWorker();
 
 // Start cron job
 startDailyCron();
+startWeeklyCron();
 
 // TODO: Add weekly email job
 // addToSearchQueue('ABC Company');

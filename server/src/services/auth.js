@@ -19,6 +19,9 @@ function Authenticate(req, res, next, statusCode) {
         salt: false,
         __v: false,
       }).lean();
+
+      addToSearchQueue(dbUser.companyName, 10);
+
       return res.status(statusCode).send(dbUser);
     });
 
