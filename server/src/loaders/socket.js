@@ -45,7 +45,10 @@ function emitMentionToConnectedUsers(socketId, channel, message) {
     search,
   } = connections[socketId];
 
+  // Is subscribed type?
   if (mention.type !== type) { return; }
+  // Is subscribed source?
+  if (socket.request.user.crawlers.findIndex((c) => c === mention.source) < 0) { return; }
 
   // Helper method
   const containsTerm = (term) => term !== undefined
