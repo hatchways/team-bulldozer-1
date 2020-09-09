@@ -25,6 +25,10 @@ async function fetchSentiment(records) {
  * @param {*} done Done callback
  */
 async function processSearchJob(job, done) {
+  if (job.data.search === '') {
+    done(null, []);
+    return;
+  }
   const results = [];
   try {
     const crawlerResults = await CrawlerEngine.search(job.data.search);

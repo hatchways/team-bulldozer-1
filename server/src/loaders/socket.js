@@ -39,6 +39,7 @@ function emitMentionToConnectedUsers(socketId, channel, message) {
   // Convert mention
   const mention = JSON.parse(message);
 
+  if (!connections[socketId]) { return; }
   const {
     socket,
     type,

@@ -8,7 +8,9 @@ exports.search = async (req, res, next) => {
     req.query.type || 'popular',
   );
 
-  // addToSearchQueue(req.query.term, 10);
+  if (req.query.term && req.query.term.length > 0) {
+    addToSearchQueue(req.query.term, 10);
+  }
 
   res.status(200).send(result);
 };
